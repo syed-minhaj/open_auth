@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -35,12 +34,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.signUp = signUp;
-function signUp(_a) {
+export function signUpPassword(_a) {
     return __awaiter(this, arguments, void 0, function (_b) {
-        var app_url, res, date;
-        var username = _b.username, email = _b.email;
+        var app_url, url, email, username, res, date;
+        var password = _b.password;
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:
@@ -50,13 +47,22 @@ function signUp(_a) {
                     if (!app_url) {
                         throw new Error('Please set the backend url in env');
                     }
+                    url = new URL(window.location.href);
+                    email = url.searchParams.get('email');
+                    username = url.searchParams.get('username');
+                    if (!email) {
+                        throw new Error('email not found in url search params');
+                    }
+                    if (!username) {
+                        throw new Error('username not found in url search params');
+                    }
                     return [4 /*yield*/, fetch(app_url + '/api/auth/open_auth', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
-                                'from': 'signUp-credential'
+                                'from': 'signUp-password'
                             },
-                            body: JSON.stringify({ username: username, email: email }),
+                            body: JSON.stringify({ email: email, password: password, username: username }),
                         }).then(function (res) { return res.json(); }).catch(function (err) {
                             console.log(err);
                             throw new Error('Backend error');
@@ -69,12 +75,10 @@ function signUp(_a) {
                     //document.cookie = `b=${res.message}258n;expires=${date.toUTCString()};`;
                     if (res.err) {
                         console.error(res.err);
-                        alert(res.err);
                         return [2 /*return*/, { err: res.err }];
                     }
                     else {
-                        // add email and username
-                        window.location.href = "/signUpPassword?email=".concat(email, "&&username=").concat(username);
+                        history.go(-2);
                     }
                     return [2 /*return*/];
             }

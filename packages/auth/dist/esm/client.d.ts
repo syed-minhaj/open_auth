@@ -1,2 +1,3 @@
 import { signUp } from "./utils/signUp";
-export { signUp };
+import { signUpPassword } from "./utils/signUpPass";
+export { signUp, signUpPassword };

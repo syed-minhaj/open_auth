@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -35,47 +34,24 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.signUp = signUp;
-function signUp(_a) {
+import { Pool } from "pg";
+export function createUser(_a) {
     return __awaiter(this, arguments, void 0, function (_b) {
-        var app_url, res, date;
+        var db, userId;
         var username = _b.username, email = _b.email;
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:
-                    app_url = process.env.BACKEND_URL
-                        || process.env.NEXT_PUBLIC_BACKEND_URL
-                        || process.env.REACT_APP_BACKEND_URL;
-                    if (!app_url) {
-                        throw new Error('Please set the backend url in env');
+                    if (!process.env.DATABASE_URL) {
+                        throw new Error('Please set the database url in env');
                     }
-                    return [4 /*yield*/, fetch(app_url + '/api/auth/open_auth', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'from': 'signUp-credential'
-                            },
-                            body: JSON.stringify({ username: username, email: email }),
-                        }).then(function (res) { return res.json(); }).catch(function (err) {
-                            console.log(err);
-                            throw new Error('Backend error');
-                        })];
+                    db = new Pool({
+                        connectionString: process.env.DATABASE_URL
+                    });
+                    userId = Math.floor(100000 + Math.random() * 900000);
+                    return [4 /*yield*/, db.query("\n        INSERT INTO \"User\" (\"userId\", \"userName\", \"userEmail\") VALUES ($1, $2, $3) ;\n    ", [userId, username, email])];
                 case 1:
-                    res = _c.sent();
-                    date = new Date();
-                    date.setTime(date.getTime() + (3 * 24 * 60 * 60 * 1000));
-                    console.log(date, "\n\nnext\n\n", date.toUTCString());
-                    //document.cookie = `b=${res.message}258n;expires=${date.toUTCString()};`;
-                    if (res.err) {
-                        console.error(res.err);
-                        alert(res.err);
-                        return [2 /*return*/, { err: res.err }];
-                    }
-                    else {
-                        // add email and username
-                        window.location.href = "/signUpPassword?email=".concat(email, "&&username=").concat(username);
-                    }
+                    _c.sent();
                     return [2 /*return*/];
             }
         });

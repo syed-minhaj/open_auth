@@ -34,7 +34,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import { signUpCred } from "./signUp-cred";
+import { signUpCred } from "./backend/signUp-cred";
+import { signUpPass } from "./backend/signUp-pass";
 export function open_auth_backend(from, data) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
@@ -48,9 +49,16 @@ export function open_auth_backend(from, data) {
                     return [4 /*yield*/, signUpCred({ username: data.username, email: data.email })];
                 case 1: return [2 /*return*/, _a.sent()];
                 case 2: throw new Error('provide username and email');
-                case 3: return [3 /*break*/, 5];
-                case 4: throw new Error('bad request');
-                case 5: return [2 /*return*/];
+                case 3: return [3 /*break*/, 9];
+                case 4:
+                    if (!(from === 'signUp-password')) return [3 /*break*/, 8];
+                    if (!(data.email && data.password && data.username)) return [3 /*break*/, 6];
+                    return [4 /*yield*/, signUpPass({ email: data.email, password: data.password, username: data.username })];
+                case 5: return [2 /*return*/, _a.sent()];
+                case 6: throw new Error('provide email and password');
+                case 7: return [3 /*break*/, 9];
+                case 8: throw new Error('bad request');
+                case 9: return [2 /*return*/];
             }
         });
     });

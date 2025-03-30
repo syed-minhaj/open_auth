@@ -36,9 +36,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkdb = checkdb;
+exports.User_table_checkdb = User_table_checkdb;
+exports.OPT_table_checkdb = OPT_table_checkdb;
 var pg_1 = require("pg");
-function checkdb() {
+function User_table_checkdb() {
     return __awaiter(this, void 0, void 0, function () {
         var db, exists, columnCheckQuery, columnCheckResult, existingColumns, requiredColumns, missingColumns, _i, missingColumns_1, column, alterQuery, error_1;
         return __generator(this, function (_a) {
@@ -65,13 +66,13 @@ function checkdb() {
                 case 4:
                     columnCheckResult = _a.sent();
                     existingColumns = columnCheckResult.rows.map(function (row) { return row.column_name; });
-                    console.log("Existing columns:", existingColumns);
                     requiredColumns = ['userEmail', 'userName', 'userId'];
                     missingColumns = requiredColumns.filter(function (col) { return !existingColumns.includes(col); });
                     if (!(missingColumns.length === 0)) return [3 /*break*/, 5];
                     console.log("User table has all required columns.");
                     return [3 /*break*/, 11];
                 case 5:
+                    console.log("Existing columns:", existingColumns);
                     console.log("Missing columns:", missingColumns);
                     _i = 0, missingColumns_1 = missingColumns;
                     _a.label = 6;
@@ -102,6 +103,79 @@ function checkdb() {
                     return [3 /*break*/, 10];
                 case 9:
                     error_1 = _a.sent();
+                    throw new Error("Cannot add missing column: ".concat(column));
+                case 10:
+                    _i++;
+                    return [3 /*break*/, 6];
+                case 11: return [2 /*return*/];
+            }
+        });
+    });
+}
+function OPT_table_checkdb() {
+    return __awaiter(this, void 0, void 0, function () {
+        var db, exists, columnCheckQuery, columnCheckResult, existingColumns, requiredColumns, missingColumns, _i, missingColumns_2, column, alterQuery, error_2;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    if (!process.env.DATABASE_URL) {
+                        throw new Error('Please set the database url in env');
+                    }
+                    db = new pg_1.Pool({
+                        connectionString: process.env.DATABASE_URL
+                    });
+                    return [4 /*yield*/, db.query("\n      SELECT EXISTS (\n        SELECT FROM information_schema.tables\n        WHERE table_name = 'OPT'\n      );\n  ")];
+                case 1:
+                    exists = _a.sent();
+                    if (!!exists.rows[0].exists) return [3 /*break*/, 3];
+                    return [4 /*yield*/, db.query("\n          CREATE TABLE \"OPT\" (\n              \"userEmail\" TEXT  PRIMARY KEY,\n              \"password\" SERIAL NOT NULL,\n              \"createdAt\" TIMESTAMP NOT NULL \n          );\n      ")];
+                case 2:
+                    _a.sent();
+                    console.log("OPT (one time password) table created");
+                    return [2 /*return*/];
+                case 3:
+                    columnCheckQuery = "\n      SELECT column_name FROM information_schema.columns \n      WHERE table_name = 'OPT' AND column_name IN ( 'userEmail', 'password' , 'createdAt');\n  ";
+                    return [4 /*yield*/, db.query(columnCheckQuery)];
+                case 4:
+                    columnCheckResult = _a.sent();
+                    existingColumns = columnCheckResult.rows.map(function (row) { return row.column_name; });
+                    requiredColumns = ['userEmail', 'password', 'createdAt'];
+                    missingColumns = requiredColumns.filter(function (col) { return !existingColumns.includes(col); });
+                    if (!(missingColumns.length === 0)) return [3 /*break*/, 5];
+                    console.log("OPT table has all required columns.");
+                    return [3 /*break*/, 11];
+                case 5:
+                    console.log("Existing columns:", existingColumns);
+                    console.log("Missing columns:", missingColumns);
+                    _i = 0, missingColumns_2 = missingColumns;
+                    _a.label = 6;
+                case 6:
+                    if (!(_i < missingColumns_2.length)) return [3 /*break*/, 11];
+                    column = missingColumns_2[_i];
+                    alterQuery = void 0;
+                    if (column === 'userEmail') {
+                        alterQuery = 'ALTER TABLE "OPT" ADD COLUMN "userEmail" TEXT NOT NULL ;';
+                        console.error("userEmail is not a unique column, please change it to unique");
+                    }
+                    else if (column === 'password') {
+                        alterQuery = 'ALTER TABLE "OPT" ADD COLUMN "password" SERIAL NOT NULL ;';
+                    }
+                    else if (column === 'createdAt') {
+                        alterQuery = 'ALTER TABLE "OPT" ADD COLUMN "createdAt" TIMESTAMP NOT NULL ;';
+                    }
+                    else {
+                        throw new Error("Unknown column: ".concat(column));
+                    }
+                    _a.label = 7;
+                case 7:
+                    _a.trys.push([7, 9, , 10]);
+                    return [4 /*yield*/, db.query(alterQuery)];
+                case 8:
+                    _a.sent();
+                    console.log("Added missing column: ".concat(column));
+                    return [3 /*break*/, 10];
+                case 9:
+                    error_2 = _a.sent();
                     throw new Error("Cannot add missing column: ".concat(column));
                 case 10:
                     _i++;

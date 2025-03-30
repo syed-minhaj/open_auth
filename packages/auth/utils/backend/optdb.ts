@@ -13,10 +13,10 @@ export async function opt_create(userEmail : string , password : number) {
     `, [userEmail]);
 
     const nowtime = new Date(Date.now())
-    const res = await db.query(`
-        INSERT INTO "OPT" ("userEmail", "password" , "createdAt") VALUES ($1, $2, $3) RETURNING "password";
+    await db.query(`
+        INSERT INTO "OPT" ("userEmail", "password" , "createdAt") VALUES ($1, $2, $3) ;
     `, [userEmail , password , nowtime]);
-    return res.rows[0].password
+    
 }
 
 export async function opt_varify(userEmail : string , password : number) {

@@ -29,9 +29,11 @@ export async function signUp({ username , email} : {username : string , email : 
     //document.cookie = `b=${res.message}258n;expires=${date.toUTCString()};`;
     if (res.err) {
         console.error(res.err)
+        alert(res.err)
         return {err : res.err}
     }else{
-        window.location.href = '/signUpPassword?email=' + email
+        // add email and username
+        window.location.href = `/signUpPassword?email=${email}&&username=${username}`
     }
 
 }

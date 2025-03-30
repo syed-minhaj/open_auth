@@ -2,9 +2,9 @@ import { User_table_checkdb, OPT_table_checkdb } from "./checkdb";
 import { opt_delete, opt_varify } from "./optdb";
 import { sendEmail } from "./sendEmail";
 import { createUser } from "./userdb";
-import { varifyUserName, varifyEmail } from "./varifyCred";
+import {sign} from "jsonwebtoken";
 
-export async function signUpPass({ email , password } : {email : string , password : number}) {
+export async function signUpPass({ email , password , username } : {email : string , password : number , username : string}) {
     
     await User_table_checkdb().catch(err => {
         console.log(err);
@@ -28,8 +28,8 @@ export async function signUpPass({ email , password } : {email : string , passwo
         console.log(err);
         return {err: 'Database error check logs for more details'}
     })
-
-    await createUser({username : email , email : email}).catch(err => {
+    console.log(username)
+    const userId = await createUser({username : username , email : email}).catch(err => {
         console.log(err);
         return {err: 'Database error check logs for more details'}
     })
@@ -38,7 +38,15 @@ export async function signUpPass({ email , password } : {email : string , passwo
         console.log(err);
         return {err: 'Database error check logs for more details'}
     })
-    return {message : "Account created"}
+
+    // create jwt
+    const user = {
+        id : userId,
+        username : username,
+        email : email
+    }
+    const jwt_tocken = sign(user , process.env.AUTH_SECRET as string)
+    return {message : "Account created" , jwt : jwt_tocken}
 
     
 }

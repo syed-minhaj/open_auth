@@ -63,11 +63,15 @@ export function signUp(_a) {
                     date = new Date();
                     date.setTime(date.getTime() + (3 * 24 * 60 * 60 * 1000));
                     console.log(date, "\n\nnext\n\n", date.toUTCString());
-                    document.cookie = "b=".concat(res.message, "258n;expires=").concat(date.toUTCString(), ";");
-                    //window.location.href = '/signUp/password'
+                    //document.cookie = `b=${res.message}258n;expires=${date.toUTCString()};`;
                     if (res.err) {
                         console.error(res.err);
+                        alert(res.err);
                         return [2 /*return*/, { err: res.err }];
+                    }
+                    else {
+                        // add email and username
+                        window.location.href = "/signUpPassword?email=".concat(email, "&&username=").concat(username);
                     }
                     return [2 /*return*/];
             }

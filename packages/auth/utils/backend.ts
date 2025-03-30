@@ -12,10 +12,10 @@ export async function open_auth_backend(from :string | null , data : any ) {
             throw new Error('provide username and email')
         }
     }else if(from === 'signUp-password') {
-        if(data.email && data.password) {
-            return await signUpPass({email : data.email , password : data.password})
+        if(data.email && data.password && data.username) {
+            return await signUpPass({email : data.email , password : data.password , username : data.username})
         }else{
-            throw new Error('provide email and password')
+            throw new Error('provide email , username and password ')
         }
     }
     else {

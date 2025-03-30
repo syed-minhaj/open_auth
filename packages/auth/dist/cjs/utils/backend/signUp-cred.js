@@ -36,47 +36,56 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.signUp = signUp;
-function signUp(_a) {
+exports.signUpCred = signUpCred;
+var checkdb_1 = require("./checkdb");
+var varifyCred_1 = require("./varifyCred");
+var optdb_1 = require("./optdb");
+var sendEmail_1 = require("./sendEmail");
+function signUpCred(_a) {
     return __awaiter(this, arguments, void 0, function (_b) {
-        var app_url, res, date;
+        var _c, UserNameError, EmailError, credErr, opt;
         var username = _b.username, email = _b.email;
-        return __generator(this, function (_c) {
-            switch (_c.label) {
-                case 0:
-                    app_url = process.env.BACKEND_URL
-                        || process.env.NEXT_PUBLIC_BACKEND_URL
-                        || process.env.REACT_APP_BACKEND_URL;
-                    if (!app_url) {
-                        throw new Error('Please set the backend url in env');
-                    }
-                    return [4 /*yield*/, fetch(app_url + '/api/auth/open_auth', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'from': 'signUp-credential'
-                            },
-                            body: JSON.stringify({ username: username, email: email }),
-                        }).then(function (res) { return res.json(); }).catch(function (err) {
-                            console.log(err);
-                            throw new Error('Backend error');
-                        })];
+        return __generator(this, function (_d) {
+            switch (_d.label) {
+                case 0: return [4 /*yield*/, (0, checkdb_1.User_table_checkdb)().catch(function (err) {
+                        console.log(err);
+                        return { err: 'Database error check logs for more details' };
+                    })];
                 case 1:
-                    res = _c.sent();
-                    date = new Date();
-                    date.setTime(date.getTime() + (3 * 24 * 60 * 60 * 1000));
-                    console.log(date, "\n\nnext\n\n", date.toUTCString());
-                    //document.cookie = `b=${res.message}258n;expires=${date.toUTCString()};`;
-                    if (res.err) {
-                        console.error(res.err);
-                        alert(res.err);
-                        return [2 /*return*/, { err: res.err }];
+                    _d.sent();
+                    return [4 /*yield*/, Promise.all([(0, varifyCred_1.varifyUserName)(username), (0, varifyCred_1.varifyEmail)(email)])];
+                case 2:
+                    _c = _d.sent(), UserNameError = _c[0], EmailError = _c[1];
+                    credErr = { UserNameError: UserNameError, EmailError: EmailError };
+                    if (UserNameError || EmailError) {
+                        return [2 /*return*/, { err: credErr }];
                     }
-                    else {
-                        // add email and username
-                        window.location.href = "/signUpPassword?email=".concat(email, "&&username=").concat(username);
-                    }
-                    return [2 /*return*/];
+                    return [4 /*yield*/, (0, checkdb_1.OPT_table_checkdb)().catch(function (err) {
+                            console.log(err);
+                            return { err: 'Database error check logs for more details' };
+                        })
+                        // generate a 8 digit OTP
+                    ];
+                case 3:
+                    _d.sent();
+                    opt = Math.floor(100000 + Math.random() * 900000);
+                    return [4 /*yield*/, (0, optdb_1.opt_create)(email, opt).catch(function (err) {
+                            console.log(err);
+                            return { err: 'Database error check logs for more details' };
+                        })
+                        // send email to user
+                    ];
+                case 4:
+                    _d.sent();
+                    // send email to user
+                    return [4 /*yield*/, (0, sendEmail_1.sendEmail)(email, "Your OTP is ".concat(opt)).catch(function (err) {
+                            console.log(err);
+                            return { err: 'Database error check logs for more details' };
+                        })];
+                case 5:
+                    // send email to user
+                    _d.sent();
+                    return [2 /*return*/, { message: "OTP sent to via email" }];
             }
         });
     });

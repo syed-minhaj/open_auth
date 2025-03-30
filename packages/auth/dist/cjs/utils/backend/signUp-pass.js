@@ -36,47 +36,55 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.signUp = signUp;
-function signUp(_a) {
+exports.signUpPass = signUpPass;
+var checkdb_1 = require("./checkdb");
+var optdb_1 = require("./optdb");
+var sendEmail_1 = require("./sendEmail");
+var userdb_1 = require("./userdb");
+function signUpPass(_a) {
     return __awaiter(this, arguments, void 0, function (_b) {
-        var app_url, res, date;
-        var username = _b.username, email = _b.email;
+        var varityOPT;
+        var email = _b.email, password = _b.password, username = _b.username;
         return __generator(this, function (_c) {
             switch (_c.label) {
-                case 0:
-                    app_url = process.env.BACKEND_URL
-                        || process.env.NEXT_PUBLIC_BACKEND_URL
-                        || process.env.REACT_APP_BACKEND_URL;
-                    if (!app_url) {
-                        throw new Error('Please set the backend url in env');
-                    }
-                    return [4 /*yield*/, fetch(app_url + '/api/auth/open_auth', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'from': 'signUp-credential'
-                            },
-                            body: JSON.stringify({ username: username, email: email }),
-                        }).then(function (res) { return res.json(); }).catch(function (err) {
-                            console.log(err);
-                            throw new Error('Backend error');
-                        })];
+                case 0: return [4 /*yield*/, (0, checkdb_1.User_table_checkdb)().catch(function (err) {
+                        console.log(err);
+                        return { err: 'Database error check logs for more details' };
+                    })];
                 case 1:
-                    res = _c.sent();
-                    date = new Date();
-                    date.setTime(date.getTime() + (3 * 24 * 60 * 60 * 1000));
-                    console.log(date, "\n\nnext\n\n", date.toUTCString());
-                    //document.cookie = `b=${res.message}258n;expires=${date.toUTCString()};`;
-                    if (res.err) {
-                        console.error(res.err);
-                        alert(res.err);
-                        return [2 /*return*/, { err: res.err }];
+                    _c.sent();
+                    return [4 /*yield*/, (0, checkdb_1.OPT_table_checkdb)().catch(function (err) {
+                            console.log(err);
+                            return { err: 'Database error check logs for more details' };
+                        })];
+                case 2:
+                    _c.sent();
+                    return [4 /*yield*/, (0, optdb_1.opt_varify)(email, password)];
+                case 3:
+                    varityOPT = _c.sent();
+                    if (!varityOPT) {
+                        return [2 /*return*/, { err: 'wrong password' }];
                     }
-                    else {
-                        // add email and username
-                        window.location.href = "/signUpPassword?email=".concat(email, "&&username=").concat(username);
-                    }
-                    return [2 /*return*/];
+                    return [4 /*yield*/, (0, optdb_1.opt_delete)(email).catch(function (err) {
+                            console.log(err);
+                            return { err: 'Database error check logs for more details' };
+                        })];
+                case 4:
+                    _c.sent();
+                    console.log(username);
+                    return [4 /*yield*/, (0, userdb_1.createUser)({ username: username, email: email }).catch(function (err) {
+                            console.log(err);
+                            return { err: 'Database error check logs for more details' };
+                        })];
+                case 5:
+                    _c.sent();
+                    return [4 /*yield*/, (0, sendEmail_1.sendEmail)(email, "Your account has been created").catch(function (err) {
+                            console.log(err);
+                            return { err: 'Database error check logs for more details' };
+                        })];
+                case 6:
+                    _c.sent();
+                    return [2 /*return*/, { message: "Account created" }];
             }
         });
     });

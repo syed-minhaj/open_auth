@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -35,49 +34,38 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.signUp = signUp;
-function signUp(_a) {
-    return __awaiter(this, arguments, void 0, function (_b) {
-        var app_url, res, date;
-        var username = _b.username, email = _b.email;
-        return __generator(this, function (_c) {
-            switch (_c.label) {
-                case 0:
-                    app_url = process.env.BACKEND_URL
-                        || process.env.NEXT_PUBLIC_BACKEND_URL
-                        || process.env.REACT_APP_BACKEND_URL;
-                    if (!app_url) {
-                        throw new Error('Please set the backend url in env');
-                    }
-                    return [4 /*yield*/, fetch(app_url + '/api/auth/open_auth', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'from': 'signUp-credential'
-                            },
-                            body: JSON.stringify({ username: username, email: email }),
-                        }).then(function (res) { return res.json(); }).catch(function (err) {
-                            console.log(err);
-                            throw new Error('Backend error');
-                        })];
-                case 1:
-                    res = _c.sent();
-                    date = new Date();
-                    date.setTime(date.getTime() + (3 * 24 * 60 * 60 * 1000));
-                    console.log(date, "\n\nnext\n\n", date.toUTCString());
-                    //document.cookie = `b=${res.message}258n;expires=${date.toUTCString()};`;
-                    if (res.err) {
-                        console.error(res.err);
-                        alert(res.err);
-                        return [2 /*return*/, { err: res.err }];
-                    }
-                    else {
-                        // add email and username
-                        window.location.href = "/signUpPassword?email=".concat(email, "&&username=").concat(username);
-                    }
-                    return [2 /*return*/];
+import { createTransport } from "nodemailer";
+export function sendEmail(email_to, message) {
+    return __awaiter(this, void 0, void 0, function () {
+        var app_password, from_email, transporter, app_name;
+        return __generator(this, function (_a) {
+            app_password = process.env.APP_PASSWORD;
+            if (!app_password) {
+                console.log("\n\n\n Enter APP_PASSWORD in .env \n Enter APP_PASSWORD in .env \n\n\n");
+                throw new Error('Backend error');
             }
+            from_email = process.env.FROM_EMAIL;
+            if (!from_email) {
+                console.log("\n\n\n Enter FROM_EMAIL in .env \n Enter FROM_EMAIL in .env \n\n\n");
+                throw new Error('Backend error');
+            }
+            transporter = createTransport({
+                host: "smtp.gmail.com",
+                port: 465,
+                secure: true,
+                auth: {
+                    user: from_email,
+                    pass: app_password
+                }
+            });
+            app_name = process.env.APP_NAME || "Open Auth";
+            transporter.sendMail({
+                from: "\"".concat(app_name, "\" <").concat(from_email, ">"),
+                to: email_to,
+                subject: 'Sign Up',
+                text: message
+            });
+            return [2 /*return*/];
         });
     });
 }

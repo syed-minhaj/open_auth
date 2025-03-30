@@ -12,7 +12,7 @@ export async function createUser({ username , email } : {username : string , ema
     const userId = Math.floor(100000 + Math.random() * 900000);
     
     await db.query(`
-        INSERT INTO "User" ("userId", "userName", "userEmail") VALUES ($1, $2, $3) RETURNING "userId";
+        INSERT INTO "User" ("userId", "userName", "userEmail") VALUES ($1, $2, $3) ;
     `, [userId , username , email]);
-    
+    return userId;
 }
