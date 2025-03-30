@@ -38,9 +38,10 @@ import { User_table_checkdb, OPT_table_checkdb } from "./checkdb";
 import { opt_delete, opt_varify } from "./optdb";
 import { sendEmail } from "./sendEmail";
 import { createUser } from "./userdb";
+import { sign } from "jsonwebtoken";
 export function signUpPass(_a) {
     return __awaiter(this, arguments, void 0, function (_b) {
-        var varityOPT;
+        var varityOPT, userId, user, jwt_tocken;
         var email = _b.email, password = _b.password, username = _b.username;
         return __generator(this, function (_c) {
             switch (_c.label) {
@@ -68,20 +69,27 @@ export function signUpPass(_a) {
                         })];
                 case 4:
                     _c.sent();
-                    console.log(username);
                     return [4 /*yield*/, createUser({ username: username, email: email }).catch(function (err) {
                             console.log(err);
                             return { err: 'Database error check logs for more details' };
                         })];
                 case 5:
-                    _c.sent();
+                    userId = _c.sent();
                     return [4 /*yield*/, sendEmail(email, "Your account has been created").catch(function (err) {
                             console.log(err);
                             return { err: 'Database error check logs for more details' };
-                        })];
+                        })
+                        // create jwt
+                    ];
                 case 6:
                     _c.sent();
-                    return [2 /*return*/, { message: "Account created" }];
+                    user = {
+                        id: userId,
+                        username: username,
+                        email: email
+                    };
+                    jwt_tocken = sign(user, process.env.AUTH_SECRET);
+                    return [2 /*return*/, { message: "Account created", jwt: jwt_tocken }];
             }
         });
     });

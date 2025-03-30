@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 export function signUp(_a) {
     return __awaiter(this, arguments, void 0, function (_b) {
-        var app_url, res, date;
+        var app_url, res;
         var username = _b.username, email = _b.email;
         return __generator(this, function (_c) {
             switch (_c.label) {
@@ -57,12 +57,11 @@ export function signUp(_a) {
                         }).then(function (res) { return res.json(); }).catch(function (err) {
                             console.log(err);
                             throw new Error('Backend error');
-                        })];
+                        })
+                        //document.cookie = `b=${res.message}258n;expires=${date.toUTCString()};`;
+                    ];
                 case 1:
                     res = _c.sent();
-                    date = new Date();
-                    date.setTime(date.getTime() + (3 * 24 * 60 * 60 * 1000));
-                    console.log(date, "\n\nnext\n\n", date.toUTCString());
                     //document.cookie = `b=${res.message}258n;expires=${date.toUTCString()};`;
                     if (res.err) {
                         console.error(res.err);

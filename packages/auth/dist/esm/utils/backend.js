@@ -55,7 +55,7 @@ export function open_auth_backend(from, data) {
                     if (!(data.email && data.password && data.username)) return [3 /*break*/, 6];
                     return [4 /*yield*/, signUpPass({ email: data.email, password: data.password, username: data.username })];
                 case 5: return [2 /*return*/, _a.sent()];
-                case 6: throw new Error('provide email and password');
+                case 6: throw new Error('provide email , username and password ');
                 case 7: return [3 /*break*/, 9];
                 case 8: throw new Error('bad request');
                 case 9: return [2 /*return*/];

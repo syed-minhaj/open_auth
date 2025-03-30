@@ -52,7 +52,7 @@ export function createUser(_a) {
                     return [4 /*yield*/, db.query("\n        INSERT INTO \"User\" (\"userId\", \"userName\", \"userEmail\") VALUES ($1, $2, $3) ;\n    ", [userId, username, email])];
                 case 1:
                     _c.sent();
-                    return [2 /*return*/];
+                    return [2 /*return*/, userId];
             }
         });
     });

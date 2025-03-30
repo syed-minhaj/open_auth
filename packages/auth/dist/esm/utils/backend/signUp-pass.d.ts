@@ -5,7 +5,9 @@ export declare function signUpPass({ email, password, username }: {
 }): Promise<{
     err: string;
     message?: undefined;
+    jwt?: undefined;
 } | {
     message: string;
+    jwt: string;
     err?: undefined;
 }>;

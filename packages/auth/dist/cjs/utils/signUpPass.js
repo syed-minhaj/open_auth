@@ -72,16 +72,18 @@ function signUpPassword(_a) {
                         })];
                 case 1:
                     res = _c.sent();
-                    date = new Date();
-                    date.setTime(date.getTime() + (3 * 24 * 60 * 60 * 1000));
-                    console.log(date, "\n\nnext\n\n", date.toUTCString());
-                    //document.cookie = `b=${res.message}258n;expires=${date.toUTCString()};`;
                     if (res.err) {
                         console.error(res.err);
                         return [2 /*return*/, { err: res.err }];
                     }
-                    else {
+                    else if (res.jwt) {
+                        date = new Date();
+                        date.setTime(date.getTime() + (3 * 24 * 60 * 60 * 1000));
+                        document.cookie = "open_auth_jwt=".concat(res.jwt, ";expires=").concat(date.toUTCString(), ";");
                         history.go(-2);
+                    }
+                    else {
+                        history.back();
                     }
                     return [2 /*return*/];
             }

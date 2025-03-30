@@ -28,7 +28,6 @@ export async function signUpPass({ email , password , username } : {email : stri
         console.log(err);
         return {err: 'Database error check logs for more details'}
     })
-    console.log(username)
     const userId = await createUser({username : username , email : email}).catch(err => {
         console.log(err);
         return {err: 'Database error check logs for more details'}

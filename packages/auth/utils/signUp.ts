@@ -22,9 +22,6 @@ export async function signUp({ username , email} : {username : string , email : 
     })
     
     
-    let date = new Date();
-    date.setTime(date.getTime() + (3 * 24*60*60*1000));
-    console.log(date , "\n\nnext\n\n" , date.toUTCString() )
 
     //document.cookie = `b=${res.message}258n;expires=${date.toUTCString()};`;
     if (res.err) {

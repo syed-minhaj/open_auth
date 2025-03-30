@@ -41,9 +41,10 @@ var checkdb_1 = require("./checkdb");
 var optdb_1 = require("./optdb");
 var sendEmail_1 = require("./sendEmail");
 var userdb_1 = require("./userdb");
+var jsonwebtoken_1 = require("jsonwebtoken");
 function signUpPass(_a) {
     return __awaiter(this, arguments, void 0, function (_b) {
-        var varityOPT;
+        var varityOPT, userId, user, jwt_tocken;
         var email = _b.email, password = _b.password, username = _b.username;
         return __generator(this, function (_c) {
             switch (_c.label) {
@@ -71,20 +72,27 @@ function signUpPass(_a) {
                         })];
                 case 4:
                     _c.sent();
-                    console.log(username);
                     return [4 /*yield*/, (0, userdb_1.createUser)({ username: username, email: email }).catch(function (err) {
                             console.log(err);
                             return { err: 'Database error check logs for more details' };
                         })];
                 case 5:
-                    _c.sent();
+                    userId = _c.sent();
                     return [4 /*yield*/, (0, sendEmail_1.sendEmail)(email, "Your account has been created").catch(function (err) {
                             console.log(err);
                             return { err: 'Database error check logs for more details' };
-                        })];
+                        })
+                        // create jwt
+                    ];
                 case 6:
                     _c.sent();
-                    return [2 /*return*/, { message: "Account created" }];
+                    user = {
+                        id: userId,
+                        username: username,
+                        email: email
+                    };
+                    jwt_tocken = (0, jsonwebtoken_1.sign)(user, process.env.AUTH_SECRET);
+                    return [2 /*return*/, { message: "Account created", jwt: jwt_tocken }];
             }
         });
     });

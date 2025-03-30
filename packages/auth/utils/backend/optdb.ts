@@ -32,8 +32,7 @@ export async function opt_varify(userEmail : string , password : number) {
         FROM "OPT"
         WHERE "userEmail" = $1  AND "password" = $2;
     `, [userEmail , password]);
-    //if opt is more than 5 min old return false
-    console.log(res.rows[0].createdAt ,  new Date(Date.now() - 5*60*1000))
+   
     if(res.rows[0] && res.rows[0].createdAt > new Date(Date.now() - 5*60*1000)) {
         return true
     }else {

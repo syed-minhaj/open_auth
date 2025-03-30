@@ -38,7 +38,6 @@ export async function signUpPassword({ password } : { password : number }) {
     }else if(res.jwt){
         let date = new Date();
         date.setTime(date.getTime() + (3 * 24*60*60*1000));
-        console.log(date , "\n\nnext\n\n" , date.toUTCString() )
         document.cookie = `open_auth_jwt=${res.jwt};expires=${date.toUTCString()};`;
         history.go(-2)
     }else{
