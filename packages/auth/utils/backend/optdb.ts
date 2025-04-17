@@ -28,14 +28,22 @@ export async function opt_varify(userEmail : string , password : number) {
     });
     // get password and created at
     const res = await db.query(`
-        SELECT "password" , "createdAt"
+        SELECT "password" , "tries" , "createdAt"
         FROM "OPT"
         WHERE "userEmail" = $1  AND "password" = $2;
     `, [userEmail , password]);
    
-    if(res.rows[0] && res.rows[0].createdAt > new Date(Date.now() - 5*60*1000)) {
+    if(res.rows[0] && res.rows[0].tries < 10 && res.rows[0].createdAt > new Date(Date.now() - 3*60*1000)) {
+        await opt_delete(userEmail)
         return true
-    }else {
+    }else if(res.rows[0] && (res.rows[0].tries > 10 || res.rows[0].createdAt < new Date(Date.now() - 5*60*1000))){
+        await opt_delete(userEmail)
+        return {err : 'OTP expired '}
+    }
+    else {
+        await db.query(`
+            UPDATE "OPT" SET "tries" = "tries" + 1 WHERE "userEmail" = $1 ;
+        `, [userEmail]);
         return false
     }
 }

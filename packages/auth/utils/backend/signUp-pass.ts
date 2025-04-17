@@ -2,10 +2,23 @@ import { User_table_checkdb, OPT_table_checkdb } from "./checkdb";
 import { opt_delete, opt_varify } from "./optdb";
 import { sendEmail } from "./sendEmail";
 import { createUser } from "./userdb";
-import {sign} from "jsonwebtoken";
+import {sign, verify} from "jsonwebtoken";
+import {z} from "zod";
 
-export async function signUpPass({ email , password , username } : {email : string , password : number , username : string}) {
+const credSchema = z.object({
+    username : z.string() ,
+    email : z.string() ,
+    prevUrl : z.string()
+})
+
+export async function signUpPass({ password , credJwt  } : { password : number  , credJwt : string }) {
     
+    
+
+    if(!process.env.AUTH_SECRET) {
+        console.log('Auth secret not set');
+        return {err: 'Auth secret not set'}
+    }
     await User_table_checkdb().catch(err => {
         console.log(err);
         return {err: 'Database error check logs for more details'}
@@ -16,24 +29,39 @@ export async function signUpPass({ email , password , username } : {email : stri
         console.log(err);
         return {err: 'Database error check logs for more details'}
     })
-    
-
-    const varityOPT = await opt_varify(email , password)
-
-    if(!varityOPT) {
-        return {err: 'wrong password'}
+    let cred_from_jwt;
+    try {
+        cred_from_jwt = verify(credJwt , process.env.AUTH_SECRET )
+    } catch (err) {
+        console.log(err , 'Invalid cred jwt');
+        return {err: 'Invalid cred jwt'}
     }
 
-    await opt_delete(email).catch(err => {
+    const safeCred = credSchema.safeParse(cred_from_jwt)
+    if(!safeCred.success) {
+        return {err : 'invalid input(cred jwt)'}
+    }
+    let cred = safeCred.data;
+    
+    const varifyOPT = await opt_varify(cred.email , password)
+    
+    if(!varifyOPT) {
+        return {err: 'wrong password'}
+    }else if(varifyOPT != true && varifyOPT.err) {
+        console.log(varifyOPT.err);
+        return {err: varifyOPT.err}
+    }
+
+    await opt_delete(cred.email).catch(err => {
         console.log(err);
         return {err: 'Database error check logs for more details'}
     })
-    const userId = await createUser({username : username , email : email}).catch(err => {
+    const userId = await createUser({username : cred.username , email : cred.email}).catch(err => {
         console.log(err);
         return {err: 'Database error check logs for more details'}
     })
 
-    await sendEmail(email , `Your account has been created`).catch(err => {
+    await sendEmail(cred.email , `Your account has been created`).catch(err => {
         console.log(err);
         return {err: 'Database error check logs for more details'}
     })
@@ -41,11 +69,11 @@ export async function signUpPass({ email , password , username } : {email : stri
     // create jwt
     const user = {
         id : userId,
-        username : username,
-        email : email
+        username : cred.username,
+        email : cred.email
     }
     const jwt_tocken = sign(user , process.env.AUTH_SECRET as string)
-    return {message : "Account created" , jwt : jwt_tocken}
+    return {message : "Account created" , jwt : jwt_tocken , returnUrl : cred.prevUrl}
 
     
 }

@@ -36,10 +36,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.uniqueEmail = uniqueEmail;
+exports.uniqueUserName = uniqueUserName;
 exports.varifyEmail = varifyEmail;
-exports.varifyUserName = varifyUserName;
 var pg_1 = require("pg");
-function varifyEmail(email) {
+function EmailExists(email) {
     return __awaiter(this, void 0, void 0, function () {
         var db, res;
         return __generator(this, function (_a) {
@@ -55,14 +56,17 @@ function varifyEmail(email) {
                 case 1:
                     res = _a.sent();
                     if (res.rows[0].exists) {
-                        return [2 /*return*/, "Accout with same Email already exists"];
+                        return [2 /*return*/, true];
+                    }
+                    else {
+                        return [2 /*return*/, false];
                     }
                     return [2 /*return*/];
             }
         });
     });
 }
-function varifyUserName(name) {
+function UserNameExists(name) {
     return __awaiter(this, void 0, void 0, function () {
         var db, res;
         return __generator(this, function (_a) {
@@ -78,7 +82,52 @@ function varifyUserName(name) {
                 case 1:
                     res = _a.sent();
                     if (res.rows[0].exists) {
+                        return [2 /*return*/, true];
+                    }
+                    else {
+                        return [2 /*return*/, false];
+                    }
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+function uniqueEmail(email) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, EmailExists(email)];
+                case 1:
+                    if (_a.sent()) {
+                        return [2 /*return*/, "Accout with same Email already exists"];
+                    }
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+function uniqueUserName(name) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, UserNameExists(name)];
+                case 1:
+                    if (_a.sent()) {
                         return [2 /*return*/, "Accout with same UserName already exists"];
+                    }
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+function varifyEmail(email) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, EmailExists(email)];
+                case 1:
+                    if ((_a.sent()) == false) {
+                        return [2 /*return*/, "Email not found , signUp to create an account"];
                     }
                     return [2 /*return*/];
             }

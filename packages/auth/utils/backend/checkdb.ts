@@ -87,6 +87,7 @@ export async function OPT_table_checkdb() {
           CREATE TABLE "OPT" (
               "userEmail" TEXT  PRIMARY KEY,
               "password" SERIAL NOT NULL,
+              "tries" INTEGER NOT NULL DEFAULT 0,
               "createdAt" TIMESTAMP NOT NULL 
           );
       `);
@@ -96,11 +97,11 @@ export async function OPT_table_checkdb() {
 
   const columnCheckQuery = `
       SELECT column_name FROM information_schema.columns 
-      WHERE table_name = 'OPT' AND column_name IN ( 'userEmail', 'password' , 'createdAt');
+      WHERE table_name = 'OPT' AND column_name IN ( 'userEmail', 'password' , 'tries' , 'createdAt');
   `;
   const columnCheckResult = await db.query(columnCheckQuery);
   const existingColumns = columnCheckResult.rows.map(row => row.column_name);
-  const requiredColumns = ['userEmail', 'password' , 'createdAt'];
+  const requiredColumns = ['userEmail', 'password' , 'tries' , 'createdAt'];
   const missingColumns = requiredColumns.filter(col => !existingColumns.includes(col));
   
   if (missingColumns.length === 0) {
@@ -115,7 +116,9 @@ export async function OPT_table_checkdb() {
           console.error("userEmail is not a unique column, please change it to unique")
         } else if (column === 'password') {
           alterQuery = 'ALTER TABLE "OPT" ADD COLUMN "password" SERIAL NOT NULL ;';
-        }else if (column === 'createdAt') {
+        } else if (column === 'tries') {
+          alterQuery = 'ALTER TABLE "OPT" ADD COLUMN "tries" INTEGER NOT NULL DEFAULT 0;';
+        } else if (column === 'createdAt') {
           alterQuery = 'ALTER TABLE "OPT" ADD COLUMN "createdAt" TIMESTAMP NOT NULL ;';
         } else {
           throw new Error(`Unknown column: ${column}`);

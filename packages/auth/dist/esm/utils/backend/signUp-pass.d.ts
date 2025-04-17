@@ -1,13 +1,14 @@
-export declare function signUpPass({ email, password, username }: {
-    email: string;
+export declare function signUpPass({ password, credJwt }: {
     password: number;
-    username: string;
+    credJwt: string;
 }): Promise<{
     err: string;
     message?: undefined;
     jwt?: undefined;
+    returnUrl?: undefined;
 } | {
     message: string;
     jwt: string;
+    returnUrl: string;
     err?: undefined;
 }>;

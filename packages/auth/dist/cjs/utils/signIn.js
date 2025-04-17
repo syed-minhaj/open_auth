@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -34,19 +35,43 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-export function signIng(data) {
-    return __awaiter(this, void 0, void 0, function () {
-        var _a, username, email, e;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
-                case 0: return [4 /*yield*/, data
-                    //reverse email
-                ];
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.signIn = signIn;
+var env_1 = require("../env");
+function signIn(_a) {
+    return __awaiter(this, arguments, void 0, function (_b) {
+        var app_url, res;
+        var email = _b.email;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
+                case 0:
+                    app_url = env_1.backend_url;
+                    if (!app_url) {
+                        throw new Error('Please set the backend url in env');
+                    }
+                    return [4 /*yield*/, fetch(app_url + '/api/auth/open_auth', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'from': 'signIn-credential'
+                            },
+                            body: JSON.stringify({ email: email, prevUrl: document.referrer }),
+                        }).then(function (res) { return res.json(); }).catch(function (err) {
+                            console.log(err);
+                            throw new Error('Backend error');
+                        })];
                 case 1:
-                    _a = _b.sent(), username = _a.username, email = _a.email;
-                    e = email.split('@')[0];
-                    console.log(e, " from next lib code in next server", process.env.OO);
-                    return [2 /*return*/, { message: e }];
+                    res = _c.sent();
+                    if (res.err) {
+                        console.error(res.err);
+                        alert(res.err);
+                        return [2 /*return*/, { err: res.err }];
+                    }
+                    else {
+                        document.cookie = "open_auth_cred=".concat(res.credJwt, ";");
+                        window.location.href = "/signInPassword";
+                    }
+                    return [2 /*return*/];
             }
         });
     });

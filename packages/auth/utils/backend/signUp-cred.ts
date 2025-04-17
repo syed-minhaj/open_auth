@@ -1,10 +1,12 @@
 import { User_table_checkdb , OPT_table_checkdb} from "./checkdb";
-import { varifyEmail , varifyUserName } from "./varifyCred";
+import { uniqueEmail , uniqueUserName } from "./varifyCred";
 import { opt_create } from "./optdb";
 import { sendEmail } from "./sendEmail";
+import { sign } from "jsonwebtoken";
 
 type functype = {
-    message : string
+    message : string ,
+    credJwt : string
 } | {
     err : string | {
         UserNameError : string | undefined
@@ -12,14 +14,14 @@ type functype = {
     }
 }
 
-export async function signUpCred({ username , email} : {username : string , email : string }): Promise<functype> {
+export async function signUpCred({ username , email , prevUrl} : {username : string , email : string , prevUrl : string }): Promise<functype> {
     
     await User_table_checkdb().catch(err => {
         console.log(err);
         return {err: 'Database error check logs for more details'}
     })
     
-    const [UserNameError , EmailError] = await Promise.all([varifyUserName(username) , varifyEmail(email)])
+    const [UserNameError , EmailError] = await Promise.all([uniqueUserName(username) , uniqueEmail(email)])
 
     const credErr = {UserNameError , EmailError}
     if (UserNameError || EmailError) {
@@ -45,7 +47,14 @@ export async function signUpCred({ username , email} : {username : string , emai
         console.log(err);
         return {err: 'Database error check logs for more details'}
     })
-    return {message : "OTP sent to via email"}
+
+    const cred = {
+        username : username,
+        email : email ,
+        prevUrl : prevUrl
+    }
+    const credJwt = sign(cred , process.env.AUTH_SECRET as string)
+    return {message : "OTP sent to via email" , credJwt : credJwt}
 
 
 

@@ -1,5 +1,6 @@
 import {Pool} from "pg";
-export async function varifyEmail(email : string) {
+
+async function EmailExists(email : string) {
     
     if(!process.env.DATABASE_URL) {
         throw new Error('Please set the database url in env')
@@ -16,11 +17,13 @@ export async function varifyEmail(email : string) {
     `, [email]);
 
     if(res.rows[0].exists) {
-        return "Accout with same Email already exists"
-    } 
+        return true
+    }else{
+        return false
+    }
 }
 
-export async function varifyUserName(name : string) {
+async function UserNameExists(name : string) {
     
     if(!process.env.DATABASE_URL) {
         throw new Error('Please set the database url in env')
@@ -37,6 +40,29 @@ export async function varifyUserName(name : string) {
     `, [name]);
 
     if(res.rows[0].exists) {
+        return true
+    }else{
+        return false
+    }
+}
+
+export async function uniqueEmail(email : string) {
+    
+    if(await EmailExists(email)) {
+        return "Accout with same Email already exists"
+    } 
+}
+
+export async function uniqueUserName(name : string) {
+    
+    if(await UserNameExists(name)) {
         return "Accout with same UserName already exists"
+    } 
+}
+
+export async function varifyEmail(email : string) {
+    
+    if(await EmailExists(email) == false) {
+        return "Email not found , signUp to create an account"
     } 
 }

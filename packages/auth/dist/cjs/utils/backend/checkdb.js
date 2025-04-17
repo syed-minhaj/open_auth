@@ -128,18 +128,18 @@ function OPT_table_checkdb() {
                 case 1:
                     exists = _a.sent();
                     if (!!exists.rows[0].exists) return [3 /*break*/, 3];
-                    return [4 /*yield*/, db.query("\n          CREATE TABLE \"OPT\" (\n              \"userEmail\" TEXT  PRIMARY KEY,\n              \"password\" SERIAL NOT NULL,\n              \"createdAt\" TIMESTAMP NOT NULL \n          );\n      ")];
+                    return [4 /*yield*/, db.query("\n          CREATE TABLE \"OPT\" (\n              \"userEmail\" TEXT  PRIMARY KEY,\n              \"password\" SERIAL NOT NULL,\n              \"tries\" INTEGER NOT NULL DEFAULT 0,\n              \"createdAt\" TIMESTAMP NOT NULL \n          );\n      ")];
                 case 2:
                     _a.sent();
                     console.log("OPT (one time password) table created");
                     return [2 /*return*/];
                 case 3:
-                    columnCheckQuery = "\n      SELECT column_name FROM information_schema.columns \n      WHERE table_name = 'OPT' AND column_name IN ( 'userEmail', 'password' , 'createdAt');\n  ";
+                    columnCheckQuery = "\n      SELECT column_name FROM information_schema.columns \n      WHERE table_name = 'OPT' AND column_name IN ( 'userEmail', 'password' , 'tries' , 'createdAt');\n  ";
                     return [4 /*yield*/, db.query(columnCheckQuery)];
                 case 4:
                     columnCheckResult = _a.sent();
                     existingColumns = columnCheckResult.rows.map(function (row) { return row.column_name; });
-                    requiredColumns = ['userEmail', 'password', 'createdAt'];
+                    requiredColumns = ['userEmail', 'password', 'tries', 'createdAt'];
                     missingColumns = requiredColumns.filter(function (col) { return !existingColumns.includes(col); });
                     if (!(missingColumns.length === 0)) return [3 /*break*/, 5];
                     console.log("OPT table has all required columns.");
@@ -159,6 +159,9 @@ function OPT_table_checkdb() {
                     }
                     else if (column === 'password') {
                         alterQuery = 'ALTER TABLE "OPT" ADD COLUMN "password" SERIAL NOT NULL ;';
+                    }
+                    else if (column === 'tries') {
+                        alterQuery = 'ALTER TABLE "OPT" ADD COLUMN "tries" INTEGER NOT NULL DEFAULT 0;';
                     }
                     else if (column === 'createdAt') {
                         alterQuery = 'ALTER TABLE "OPT" ADD COLUMN "createdAt" TIMESTAMP NOT NULL ;';

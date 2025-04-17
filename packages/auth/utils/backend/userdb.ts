@@ -16,3 +16,20 @@ export async function createUser({ username , email } : {username : string , ema
     `, [userId , username , email]);
     return userId;
 }
+
+export async function getUser({userEmail} : {userEmail : string}) {
+    if(!process.env.DATABASE_URL) {
+        throw new Error('Please set the database url in env')
+    }
+    const db = new Pool({
+        connectionString: process.env.DATABASE_URL
+    });
+    const res = await db.query(`
+        SELECT "userId", "userName", "userEmail" FROM "User" WHERE "userEmail" = $1;
+    `, [userEmail]);
+    if(!res.rows[0]) {
+        throw new Error('User not found')
+    }
+    console.log(res.rows[0])
+    return res.rows[0]
+}

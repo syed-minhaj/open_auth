@@ -37,6 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createUser = createUser;
+exports.getUser = getUser;
 var pg_1 = require("pg");
 function createUser(_a) {
     return __awaiter(this, arguments, void 0, function (_b) {
@@ -56,6 +57,31 @@ function createUser(_a) {
                 case 1:
                     _c.sent();
                     return [2 /*return*/, userId];
+            }
+        });
+    });
+}
+function getUser(_a) {
+    return __awaiter(this, arguments, void 0, function (_b) {
+        var db, res;
+        var userEmail = _b.userEmail;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
+                case 0:
+                    if (!process.env.DATABASE_URL) {
+                        throw new Error('Please set the database url in env');
+                    }
+                    db = new pg_1.Pool({
+                        connectionString: process.env.DATABASE_URL
+                    });
+                    return [4 /*yield*/, db.query("\n        SELECT \"userId\", \"userName\", \"userEmail\" FROM \"User\" WHERE \"userEmail\" = $1;\n    ", [userEmail])];
+                case 1:
+                    res = _c.sent();
+                    if (!res.rows[0]) {
+                        throw new Error('User not found');
+                    }
+                    console.log(res.rows[0]);
+                    return [2 /*return*/, res.rows[0]];
             }
         });
     });

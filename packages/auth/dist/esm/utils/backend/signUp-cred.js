@@ -35,13 +35,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 import { User_table_checkdb, OPT_table_checkdb } from "./checkdb";
-import { varifyEmail, varifyUserName } from "./varifyCred";
+import { uniqueEmail, uniqueUserName } from "./varifyCred";
 import { opt_create } from "./optdb";
 import { sendEmail } from "./sendEmail";
+import { sign } from "jsonwebtoken";
 export function signUpCred(_a) {
     return __awaiter(this, arguments, void 0, function (_b) {
-        var _c, UserNameError, EmailError, credErr, opt;
-        var username = _b.username, email = _b.email;
+        var _c, UserNameError, EmailError, credErr, opt, cred, credJwt;
+        var username = _b.username, email = _b.email, prevUrl = _b.prevUrl;
         return __generator(this, function (_d) {
             switch (_d.label) {
                 case 0: return [4 /*yield*/, User_table_checkdb().catch(function (err) {
@@ -50,7 +51,7 @@ export function signUpCred(_a) {
                     })];
                 case 1:
                     _d.sent();
-                    return [4 /*yield*/, Promise.all([varifyUserName(username), varifyEmail(email)])];
+                    return [4 /*yield*/, Promise.all([uniqueUserName(username), uniqueEmail(email)])];
                 case 2:
                     _c = _d.sent(), UserNameError = _c[0], EmailError = _c[1];
                     credErr = { UserNameError: UserNameError, EmailError: EmailError };
@@ -82,7 +83,13 @@ export function signUpCred(_a) {
                 case 5:
                     // send email to user
                     _d.sent();
-                    return [2 /*return*/, { message: "OTP sent to via email" }];
+                    cred = {
+                        username: username,
+                        email: email,
+                        prevUrl: prevUrl
+                    };
+                    credJwt = sign(cred, process.env.AUTH_SECRET);
+                    return [2 /*return*/, { message: "OTP sent to via email", credJwt: credJwt }];
             }
         });
     });

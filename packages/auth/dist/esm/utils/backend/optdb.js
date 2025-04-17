@@ -73,16 +73,24 @@ export function opt_varify(userEmail, password) {
                     db = new Pool({
                         connectionString: process.env.DATABASE_URL
                     });
-                    return [4 /*yield*/, db.query("\n        SELECT \"password\" , \"createdAt\"\n        FROM \"OPT\"\n        WHERE \"userEmail\" = $1  AND \"password\" = $2;\n    ", [userEmail, password])];
+                    return [4 /*yield*/, db.query("\n        SELECT \"password\" , \"tries\" , \"createdAt\"\n        FROM \"OPT\"\n        WHERE \"userEmail\" = $1  AND \"password\" = $2;\n    ", [userEmail, password])];
                 case 1:
                     res = _a.sent();
-                    if (res.rows[0] && res.rows[0].createdAt > new Date(Date.now() - 5 * 60 * 1000)) {
-                        return [2 /*return*/, true];
-                    }
-                    else {
-                        return [2 /*return*/, false];
-                    }
-                    return [2 /*return*/];
+                    if (!(res.rows[0] && res.rows[0].tries < 10 && res.rows[0].createdAt > new Date(Date.now() - 3 * 60 * 1000))) return [3 /*break*/, 3];
+                    return [4 /*yield*/, opt_delete(userEmail)];
+                case 2:
+                    _a.sent();
+                    return [2 /*return*/, true];
+                case 3:
+                    if (!(res.rows[0] && (res.rows[0].tries > 10 || res.rows[0].createdAt < new Date(Date.now() - 5 * 60 * 1000)))) return [3 /*break*/, 5];
+                    return [4 /*yield*/, opt_delete(userEmail)];
+                case 4:
+                    _a.sent();
+                    return [2 /*return*/, { err: 'OTP expired ' }];
+                case 5: return [4 /*yield*/, db.query("\n            UPDATE \"OPT\" SET \"tries\" = \"tries\" + 1 WHERE \"userEmail\" = $1 ;\n        ", [userEmail])];
+                case 6:
+                    _a.sent();
+                    return [2 /*return*/, false];
             }
         });
     });

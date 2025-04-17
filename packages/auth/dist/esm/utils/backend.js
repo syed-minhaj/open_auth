@@ -34,31 +34,124 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+import { resendPass } from "./backend/resendPass";
+import { signInCred } from "./backend/signIn-cred";
 import { signUpCred } from "./backend/signUp-cred";
 import { signUpPass } from "./backend/signUp-pass";
+import { signInPass } from "./backend/signIn-pass";
+import { z } from "zod";
+var signUpCredSchema = z.object({
+    username: z.string(),
+    email: z.string().email({ message: "invalid email" }),
+    prevUrl: z.string()
+});
+var signUpPassSchema = z.object({
+    password: z.number(),
+    credJwt: z.string().jwt({ message: "invalid jwt" })
+});
+var signInCredSchema = z.object({
+    email: z.string().email({ message: "invalid email" }),
+    prevUrl: z.string()
+});
+var signInPassSchema = z.object({
+    password: z.number(),
+    credJwt: z.string().jwt({ message: "invalid jwt" })
+});
 export function open_auth_backend(from, data) {
     return __awaiter(this, void 0, void 0, function () {
+        var Console, originalLog, res;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    Console = console.Console;
+                    originalLog = new Console({ stdout: process.stdout });
+                    console.log = function () {
+                        var args = [];
+                        for (var _i = 0; _i < arguments.length; _i++) {
+                            args[_i] = arguments[_i];
+                        }
+                        process.stdout.write("\x1b[34m" + '[OPEN_AUTH] ' + "\x1b[0m");
+                        var message = args.map(function (arg) {
+                            return typeof arg === 'object' ? JSON.stringify(arg) : String(arg);
+                        }).join(' ');
+                        process.stdout.write(message);
+                        process.stdout.write("\n");
+                    };
+                    return [4 /*yield*/, backend(from, data)];
+                case 1:
+                    res = _a.sent();
+                    console.log = originalLog.log;
+                    return [2 /*return*/, res];
+            }
+        });
+    });
+}
+function backend(from, data) {
+    return __awaiter(this, void 0, void 0, function () {
+        var d, signUpCredZod, signUpPassZod, signInCredZod, signInPassZod;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     if (!from) {
-                        throw new Error('bad request');
+                        return [2 /*return*/, { err: "bad request" }];
                     }
                     if (!(from === 'signUp-credential')) return [3 /*break*/, 4];
                     if (!(data.username && data.email)) return [3 /*break*/, 2];
-                    return [4 /*yield*/, signUpCred({ username: data.username, email: data.email })];
+                    d = {
+                        username: data.username,
+                        email: data.email,
+                        prevUrl: (data.prevUrl == "") ? "/" : data.prevUrl
+                    };
+                    signUpCredZod = signUpCredSchema.safeParse(d);
+                    if (!signUpCredZod.success) {
+                        return [2 /*return*/, { err: "invalid input" }];
+                    }
+                    return [4 /*yield*/, signUpCred(signUpCredZod.data)];
                 case 1: return [2 /*return*/, _a.sent()];
-                case 2: throw new Error('provide username and email');
-                case 3: return [3 /*break*/, 9];
+                case 2: return [2 /*return*/, { err: "provide username and email" }];
+                case 3: return [3 /*break*/, 21];
                 case 4:
                     if (!(from === 'signUp-password')) return [3 /*break*/, 8];
-                    if (!(data.email && data.password && data.username)) return [3 /*break*/, 6];
-                    return [4 /*yield*/, signUpPass({ email: data.email, password: data.password, username: data.username })];
+                    if (!(data.password && data.credJwt)) return [3 /*break*/, 6];
+                    signUpPassZod = signUpPassSchema.safeParse(data);
+                    if (!signUpPassZod.success) {
+                        return [2 /*return*/, { err: "invalid input" }];
+                    }
+                    return [4 /*yield*/, signUpPass(signUpPassZod.data)];
                 case 5: return [2 /*return*/, _a.sent()];
-                case 6: throw new Error('provide email , username and password ');
-                case 7: return [3 /*break*/, 9];
-                case 8: throw new Error('bad request');
-                case 9: return [2 /*return*/];
+                case 6: return [2 /*return*/, { err: "provide password and credJwt" }];
+                case 7: return [3 /*break*/, 21];
+                case 8:
+                    if (!(from === 'resendPass')) return [3 /*break*/, 12];
+                    if (!data.credJwt) return [3 /*break*/, 10];
+                    return [4 /*yield*/, resendPass(data)];
+                case 9: return [2 /*return*/, _a.sent()];
+                case 10: return [2 /*return*/, { err: "provide email and credJwt" }];
+                case 11: return [3 /*break*/, 21];
+                case 12:
+                    if (!(from === 'signIn-credential')) return [3 /*break*/, 16];
+                    if (!data.email) return [3 /*break*/, 14];
+                    signInCredZod = signInCredSchema.safeParse(data);
+                    if (!signInCredZod.success) {
+                        return [2 /*return*/, { err: "invalid input" }];
+                    }
+                    return [4 /*yield*/, signInCred(signInCredZod.data)];
+                case 13: return [2 /*return*/, _a.sent()];
+                case 14: return [2 /*return*/, { err: "provide email" }];
+                case 15: return [3 /*break*/, 21];
+                case 16:
+                    if (!(from === 'signIn-password')) return [3 /*break*/, 20];
+                    if (!(data.password && data.credJwt)) return [3 /*break*/, 18];
+                    signInPassZod = signInPassSchema.safeParse(data);
+                    if (!signInPassZod.success) {
+                        return [2 /*return*/, { err: "invalid input" }];
+                    }
+                    return [4 /*yield*/, signInPass(signInPassZod.data)];
+                case 17: return [2 /*return*/, _a.sent()];
+                case 18: return [2 /*return*/, { err: "provide password and credJwt" }];
+                case 19: return [3 /*break*/, 21];
+                case 20: return [2 /*return*/, { err: "bad request" }];
+                case 21: return [2 /*return*/];
             }
         });
     });

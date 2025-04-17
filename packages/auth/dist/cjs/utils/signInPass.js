@@ -36,20 +36,51 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.signIng = signIng;
-function signIng(data) {
-    return __awaiter(this, void 0, void 0, function () {
-        var _a, username, email, e;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
-                case 0: return [4 /*yield*/, data
-                    //reverse email
-                ];
+exports.signInPassword = signInPassword;
+var env_1 = require("../env");
+function signInPassword(_a) {
+    return __awaiter(this, arguments, void 0, function (_b) {
+        function getCookie(name) {
+            var _a;
+            return (_a = document.cookie.split('; ').find(function (row) { return row.startsWith(name + '='); })) === null || _a === void 0 ? void 0 : _a.split('=')[1];
+        }
+        var app_url, res, date;
+        var password = _b.password;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
+                case 0:
+                    app_url = env_1.backend_url;
+                    if (!app_url) {
+                        throw new Error('Please set the backend url in env');
+                    }
+                    return [4 /*yield*/, fetch(app_url + '/api/auth/open_auth', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'from': 'signIn-password'
+                            },
+                            body: JSON.stringify({ password: password, credJwt: getCookie('open_auth_cred') }),
+                        }).then(function (res) { return res.json(); }).catch(function (err) {
+                            console.log(err);
+                            throw new Error('Backend error');
+                        })];
                 case 1:
-                    _a = _b.sent(), username = _a.username, email = _a.email;
-                    e = email.split('@')[0];
-                    console.log(e, " from next lib code in next server", process.env.OO);
-                    return [2 /*return*/, { message: e }];
+                    res = _c.sent();
+                    if (res.err) {
+                        console.error(res.err);
+                        return [2 /*return*/, { err: res.err }];
+                    }
+                    else if (res.jwt) {
+                        date = new Date();
+                        date.setTime(date.getTime() + (3 * 24 * 60 * 60 * 1000));
+                        document.cookie = "open_auth_jwt=".concat(res.jwt, ";expires=").concat(date.toUTCString(), ";");
+                        document.cookie = "open_auth_cred=;expires=Tue, 01 Apr 2025 00:00:00 GMT;";
+                        window.location.href = res.returnUrl;
+                    }
+                    else {
+                        history.back();
+                    }
+                    return [2 /*return*/];
             }
         });
     });

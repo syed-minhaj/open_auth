@@ -34,6 +34,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+import { backend_url } from '../env';
 export function signUp(_a) {
     return __awaiter(this, arguments, void 0, function (_b) {
         var app_url, res;
@@ -41,9 +42,7 @@ export function signUp(_a) {
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:
-                    app_url = process.env.BACKEND_URL
-                        || process.env.NEXT_PUBLIC_BACKEND_URL
-                        || process.env.REACT_APP_BACKEND_URL;
+                    app_url = backend_url;
                     if (!app_url) {
                         throw new Error('Please set the backend url in env');
                     }
@@ -53,7 +52,7 @@ export function signUp(_a) {
                                 'Content-Type': 'application/json',
                                 'from': 'signUp-credential'
                             },
-                            body: JSON.stringify({ username: username, email: email }),
+                            body: JSON.stringify({ username: username, email: email, prevUrl: document.referrer }),
                         }).then(function (res) { return res.json(); }).catch(function (err) {
                             console.log(err);
                             throw new Error('Backend error');
@@ -70,7 +69,8 @@ export function signUp(_a) {
                     }
                     else {
                         // add email and username
-                        window.location.href = "/signUpPassword?email=".concat(email, "&&username=").concat(username);
+                        document.cookie = "open_auth_cred=".concat(res.credJwt, ";");
+                        window.location.href = "/signUpPassword";
                     }
                     return [2 /*return*/];
             }

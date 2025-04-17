@@ -42,16 +42,27 @@ var optdb_1 = require("./optdb");
 var sendEmail_1 = require("./sendEmail");
 var userdb_1 = require("./userdb");
 var jsonwebtoken_1 = require("jsonwebtoken");
+var zod_1 = require("zod");
+var credSchema = zod_1.z.object({
+    username: zod_1.z.string(),
+    email: zod_1.z.string(),
+    prevUrl: zod_1.z.string()
+});
 function signUpPass(_a) {
     return __awaiter(this, arguments, void 0, function (_b) {
-        var varityOPT, userId, user, jwt_tocken;
-        var email = _b.email, password = _b.password, username = _b.username;
+        var cred_from_jwt, safeCred, cred, varifyOPT, userId, user, jwt_tocken;
+        var password = _b.password, credJwt = _b.credJwt;
         return __generator(this, function (_c) {
             switch (_c.label) {
-                case 0: return [4 /*yield*/, (0, checkdb_1.User_table_checkdb)().catch(function (err) {
-                        console.log(err);
-                        return { err: 'Database error check logs for more details' };
-                    })];
+                case 0:
+                    if (!process.env.AUTH_SECRET) {
+                        console.log('Auth secret not set');
+                        return [2 /*return*/, { err: 'Auth secret not set' }];
+                    }
+                    return [4 /*yield*/, (0, checkdb_1.User_table_checkdb)().catch(function (err) {
+                            console.log(err);
+                            return { err: 'Database error check logs for more details' };
+                        })];
                 case 1:
                     _c.sent();
                     return [4 /*yield*/, (0, checkdb_1.OPT_table_checkdb)().catch(function (err) {
@@ -60,25 +71,41 @@ function signUpPass(_a) {
                         })];
                 case 2:
                     _c.sent();
-                    return [4 /*yield*/, (0, optdb_1.opt_varify)(email, password)];
+                    try {
+                        cred_from_jwt = (0, jsonwebtoken_1.verify)(credJwt, process.env.AUTH_SECRET);
+                    }
+                    catch (err) {
+                        console.log(err, 'Invalid cred jwt');
+                        return [2 /*return*/, { err: 'Invalid cred jwt' }];
+                    }
+                    safeCred = credSchema.safeParse(cred_from_jwt);
+                    if (!safeCred.success) {
+                        return [2 /*return*/, { err: 'invalid input(cred jwt)' }];
+                    }
+                    cred = safeCred.data;
+                    return [4 /*yield*/, (0, optdb_1.opt_varify)(cred.email, password)];
                 case 3:
-                    varityOPT = _c.sent();
-                    if (!varityOPT) {
+                    varifyOPT = _c.sent();
+                    if (!varifyOPT) {
                         return [2 /*return*/, { err: 'wrong password' }];
                     }
-                    return [4 /*yield*/, (0, optdb_1.opt_delete)(email).catch(function (err) {
+                    else if (varifyOPT != true && varifyOPT.err) {
+                        console.log(varifyOPT.err);
+                        return [2 /*return*/, { err: varifyOPT.err }];
+                    }
+                    return [4 /*yield*/, (0, optdb_1.opt_delete)(cred.email).catch(function (err) {
                             console.log(err);
                             return { err: 'Database error check logs for more details' };
                         })];
                 case 4:
                     _c.sent();
-                    return [4 /*yield*/, (0, userdb_1.createUser)({ username: username, email: email }).catch(function (err) {
+                    return [4 /*yield*/, (0, userdb_1.createUser)({ username: cred.username, email: cred.email }).catch(function (err) {
                             console.log(err);
                             return { err: 'Database error check logs for more details' };
                         })];
                 case 5:
                     userId = _c.sent();
-                    return [4 /*yield*/, (0, sendEmail_1.sendEmail)(email, "Your account has been created").catch(function (err) {
+                    return [4 /*yield*/, (0, sendEmail_1.sendEmail)(cred.email, "Your account has been created").catch(function (err) {
                             console.log(err);
                             return { err: 'Database error check logs for more details' };
                         })
@@ -88,11 +115,11 @@ function signUpPass(_a) {
                     _c.sent();
                     user = {
                         id: userId,
-                        username: username,
-                        email: email
+                        username: cred.username,
+                        email: cred.email
                     };
                     jwt_tocken = (0, jsonwebtoken_1.sign)(user, process.env.AUTH_SECRET);
-                    return [2 /*return*/, { message: "Account created", jwt: jwt_tocken }];
+                    return [2 /*return*/, { message: "Account created", jwt: jwt_tocken, returnUrl: cred.prevUrl }];
             }
         });
     });

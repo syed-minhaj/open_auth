@@ -41,10 +41,11 @@ var checkdb_1 = require("./checkdb");
 var varifyCred_1 = require("./varifyCred");
 var optdb_1 = require("./optdb");
 var sendEmail_1 = require("./sendEmail");
+var jsonwebtoken_1 = require("jsonwebtoken");
 function signUpCred(_a) {
     return __awaiter(this, arguments, void 0, function (_b) {
-        var _c, UserNameError, EmailError, credErr, opt;
-        var username = _b.username, email = _b.email;
+        var _c, UserNameError, EmailError, credErr, opt, cred, credJwt;
+        var username = _b.username, email = _b.email, prevUrl = _b.prevUrl;
         return __generator(this, function (_d) {
             switch (_d.label) {
                 case 0: return [4 /*yield*/, (0, checkdb_1.User_table_checkdb)().catch(function (err) {
@@ -53,7 +54,7 @@ function signUpCred(_a) {
                     })];
                 case 1:
                     _d.sent();
-                    return [4 /*yield*/, Promise.all([(0, varifyCred_1.varifyUserName)(username), (0, varifyCred_1.varifyEmail)(email)])];
+                    return [4 /*yield*/, Promise.all([(0, varifyCred_1.uniqueUserName)(username), (0, varifyCred_1.uniqueEmail)(email)])];
                 case 2:
                     _c = _d.sent(), UserNameError = _c[0], EmailError = _c[1];
                     credErr = { UserNameError: UserNameError, EmailError: EmailError };
@@ -85,7 +86,13 @@ function signUpCred(_a) {
                 case 5:
                     // send email to user
                     _d.sent();
-                    return [2 /*return*/, { message: "OTP sent to via email" }];
+                    cred = {
+                        username: username,
+                        email: email,
+                        prevUrl: prevUrl
+                    };
+                    credJwt = (0, jsonwebtoken_1.sign)(cred, process.env.AUTH_SECRET);
+                    return [2 /*return*/, { message: "OTP sent to via email", credJwt: credJwt }];
             }
         });
     });

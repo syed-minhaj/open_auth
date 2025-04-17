@@ -1,9 +1,8 @@
+import { backend_url } from '../env'
 
 export async function signUp({ username , email} : {username : string , email : string }) {
     
-    const app_url = process.env.BACKEND_URL 
-                 || process.env.NEXT_PUBLIC_BACKEND_URL
-                 || process.env.REACT_APP_BACKEND_URL
+    const app_url = backend_url
     
     if(!app_url) {
         throw new Error('Please set the backend url in env')
@@ -15,7 +14,7 @@ export async function signUp({ username , email} : {username : string , email : 
             'Content-Type': 'application/json',
             'from' : 'signUp-credential'
         },
-        body: JSON.stringify({ username , email }),
+        body: JSON.stringify({ username , email , prevUrl : document.referrer}),
     }).then( res => res.json()).catch(err => {
         console.log(err)
         throw new Error('Backend error')
@@ -30,7 +29,8 @@ export async function signUp({ username , email} : {username : string , email : 
         return {err : res.err}
     }else{
         // add email and username
-        window.location.href = `/signUpPassword?email=${email}&&username=${username}`
+        document.cookie = `open_auth_cred=${res.credJwt};`;
+        window.location.href = `/signUpPassword`
     }
 
 }
