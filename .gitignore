@@ -3,4 +3,5 @@
 /dev
 
 /packages/auth/node_modules
-/packages/auth/dist
+
+
