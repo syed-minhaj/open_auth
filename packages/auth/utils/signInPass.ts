@@ -1,6 +1,5 @@
-import { backend_url } from '../env'
 
-export async function signInPassword({ password } : { password : number }) {
+export async function signInPassword({ password , backend_url} : {password : number , backend_url : string}) {
 
     const app_url = backend_url
     

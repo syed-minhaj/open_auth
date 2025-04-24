@@ -28,19 +28,9 @@ npm install @open_auth/auth
 
 ---
 
+## 🧩 Setup
+
 ## 🌍 Environment Variables
-
-### Frontend App
-
-| Variable         | Description                            |
-|------------------|----------------------------------------|
-| `BACKEND_URL`    | URL of your backend server (e.g., `http://localhost:3000`) |
-
-```env
-NEXT_PUBLIC_BACKEND_URL=http://localhost:3001
-```
-
----
 
 ### Backend App
 
@@ -62,9 +52,27 @@ AUTH_SECRET=your-secure-auth-secret
 
 > 🐘 **Note:** PostgreSQL is required as the backend database.
 
+
+### 📦 Initialize Client
+
+You must create an instance of the client using the backend URL:
+
+```ts
+import { CreateOpenAuthClient } from "@open_auth/auth/client";
+
+const openAuth = new CreateOpenAuthClient({
+  backendUrl: "http://localhost:3000" // or process.env.NEXT_PUBLIC_BACKEND_URL
+});
+
+export default openAuth;
+```
+
+You can place this in `lib/open_auth.ts` and import it throughout your app.  
+Alternatively, use directly where needed.
+
 ---
 
-## 🔧 Project Setup (for JS/TS)
+## 🔧 Project Configuration
 
 Make sure your project includes this in `tsconfig.json` or `jsconfig.json`:
 
@@ -81,17 +89,12 @@ Make sure your project includes this in `tsconfig.json` or `jsconfig.json`:
 
 ## 🧪 Usage
 
-Import from:
+Import from your `openAuth` instance:
 
-```js
-import {
-  signUp,
-  signUpPassword,
-  signIn,
-  signInPassword,
-  resendPass,
-  signOut
-} from "@open_auth/auth/client";
+```ts
+import openAuth from "@/lib/open_auth";
+
+await openAuth.signUp({ username: "user", email: "user@example.com" });
 ```
 
 Each function returns `{ err: string }` or a success response.
@@ -103,89 +106,76 @@ Each function returns `{ err: string }` or a success response.
 ### 🟣 signUp
 
 **React**
-```js
-await signUp({ username: "user", email: "user@example.com" });
+```ts
+await openAuth.signUp({ username: "user", email: "user@example.com" });
 ```
 
 **Vanilla JS (CommonJS)**
 ```js
-const { signUp } = require("@open_auth/auth/client");
-signUp({ username: "user", email: "user@example.com" });
+const { CreateOpenAuthClient } = require("@open_auth/auth/client");
+const openAuth = new CreateOpenAuthClient({ backendUrl: "http://localhost:3000" });
+
+openAuth.signUp({ username: "user", email: "user@example.com" });
 ```
 
 ---
 
 ### 🟣 signUpPassword
 
-**React**
-```js
-await signUpPassword({ password: "123456" });
+```ts
+await openAuth.signUpPassword({ password: "123456" });
 ```
 
-**Vanilla JS (CommonJS)**
 ```js
-const { signUpPassword } = require("@open_auth/auth/client");
-signUpPassword({ password: "123456" });
+openAuth.signUpPassword({ password: "123456" });
 ```
 
 ---
 
 ### 🟢 signIn
 
-**React**
-```js
-await signIn({ email: "user@example.com" });
+```ts
+await openAuth.signIn({ email: "user@example.com" });
 ```
 
-**Vanilla JS (CommonJS)**
 ```js
-const { signIn } = require("@open_auth/auth/client");
-signIn({ email: "user@example.com" });
+openAuth.signIn({ email: "user@example.com" });
 ```
 
 ---
 
 ### 🟢 signInPassword
 
-**React**
-```js
-await signInPassword({ password: "123456" });
+```ts
+await openAuth.signInPassword({ password: "123456" });
 ```
 
-**Vanilla JS (CommonJS)**
 ```js
-const { signInPassword } = require("@open_auth/auth/client");
-signInPassword({ password: "123456" });
+openAuth.signInPassword({ password: "123456" });
 ```
 
 ---
 
 ### 🔁 resendPass
 
-**React**
-```js
-await resendPass();
+```ts
+await openAuth.resendPass();
 ```
 
-**Vanilla JS (CommonJS)**
 ```js
-const { resendPass } = require("@open_auth/auth/client");
-resendPass();
+openAuth.resendPass();
 ```
 
 ---
 
 ### 🚪 signOut
 
-**React**
-```js
-signOut();
+```ts
+openAuth.signOut();
 ```
 
-**Vanilla JS (CommonJS)**
 ```js
-const { signOut } = require("@open_auth/auth/client");
-signOut();
+openAuth.signOut();
 ```
 
 ---

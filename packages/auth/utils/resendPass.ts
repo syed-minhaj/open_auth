@@ -1,6 +1,5 @@
-import { backend_url } from '../env'
 
-export async function resendPass() {
+export async function resendPass({ backend_url} : {backend_url : string}) {
     
     const app_url = backend_url
     

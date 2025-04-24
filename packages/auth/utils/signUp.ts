@@ -1,6 +1,5 @@
-import { backend_url } from '../env'
 
-export async function signUp({ username , email} : {username : string , email : string }) {
+export async function signUp({ username , email , backend_url} : {username : string , email : string , backend_url : string}) {
     
     const app_url = backend_url
     
