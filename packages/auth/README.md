@@ -123,11 +123,11 @@ openAuth.signUp({ username: "user", email: "user@example.com" });
 ### 🟣 signUpPassword
 
 ```ts
-await openAuth.signUpPassword({ password: "123456" });
+await openAuth.signUpPassword({ password: 123456 });
 ```
 
 ```js
-openAuth.signUpPassword({ password: "123456" });
+openAuth.signUpPassword({ password: 123456 });
 ```
 
 ---
@@ -147,11 +147,11 @@ openAuth.signIn({ email: "user@example.com" });
 ### 🟢 signInPassword
 
 ```ts
-await openAuth.signInPassword({ password: "123456" });
+await openAuth.signInPassword({ password: 123456 });
 ```
 
 ```js
-openAuth.signInPassword({ password: "123456" });
+openAuth.signInPassword({ password: 123456 });
 ```
 
 ---
@@ -220,10 +220,6 @@ export async function POST(req: NextRequest) {
   const from = req.headers.get('from');
   const res = await open_auth_backend(from, data);
   return NextResponse.json(res);
-}
-
-export async function GET(req: NextRequest) {
-  return NextResponse.json({ message: 'success' });
 }
 ```
 
