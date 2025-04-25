@@ -80,7 +80,6 @@ function getUser(_a) {
                     if (!res.rows[0]) {
                         throw new Error('User not found');
                     }
-                    console.log(res.rows[0]);
                     return [2 /*return*/, res.rows[0]];
             }
         });

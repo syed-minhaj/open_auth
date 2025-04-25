@@ -37,15 +37,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.signUp = signUp;
-var env_1 = require("../env");
 function signUp(_a) {
     return __awaiter(this, arguments, void 0, function (_b) {
         var app_url, res;
-        var username = _b.username, email = _b.email;
+        var username = _b.username, email = _b.email, backend_url = _b.backend_url;
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:
-                    app_url = env_1.backend_url;
+                    app_url = backend_url;
                     if (!app_url) {
                         throw new Error('Please set the backend url in env');
                     }

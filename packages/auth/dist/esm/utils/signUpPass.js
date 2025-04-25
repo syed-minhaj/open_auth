@@ -34,7 +34,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import { backend_url } from '../env';
 export function signUpPassword(_a) {
     return __awaiter(this, arguments, void 0, function (_b) {
         function getCookie(name) {
@@ -42,7 +41,7 @@ export function signUpPassword(_a) {
             return (_a = document.cookie.split('; ').find(function (row) { return row.startsWith(name + '='); })) === null || _a === void 0 ? void 0 : _a.split('=')[1];
         }
         var app_url, res, date;
-        var password = _b.password;
+        var password = _b.password, backend_url = _b.backend_url;
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:

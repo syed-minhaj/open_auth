@@ -34,11 +34,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import { backend_url } from "../env";
 export function signIn(_a) {
     return __awaiter(this, arguments, void 0, function (_b) {
         var app_url, res;
-        var email = _b.email;
+        var email = _b.email, backend_url = _b.backend_url;
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:

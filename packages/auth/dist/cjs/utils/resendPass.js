@@ -37,18 +37,18 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.resendPass = resendPass;
-var env_1 = require("../env");
-function resendPass() {
-    return __awaiter(this, void 0, void 0, function () {
+function resendPass(_a) {
+    return __awaiter(this, arguments, void 0, function (_b) {
         function getCookie(name) {
             var _a;
             return (_a = document.cookie.split('; ').find(function (row) { return row.startsWith(name + '='); })) === null || _a === void 0 ? void 0 : _a.split('=')[1];
         }
         var app_url, credJwt, res;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        var backend_url = _b.backend_url;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
                 case 0:
-                    app_url = env_1.backend_url;
+                    app_url = backend_url;
                     if (!app_url) {
                         throw new Error('Please set the backend url in env');
                     }
@@ -65,7 +65,7 @@ function resendPass() {
                             throw new Error('Backend error');
                         })];
                 case 1:
-                    res = _a.sent();
+                    res = _c.sent();
                     if (res.err) {
                         console.error(res.err);
                         alert(res.err);
