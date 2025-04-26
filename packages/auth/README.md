@@ -52,6 +52,21 @@ AUTH_SECRET=your-secure-auth-secret
 
 > 🐘 **Note:** PostgreSQL is required as the backend database.
 
+---
+
+## 📍 Usage Note
+Each auth function is meant to be used **on its specific page**:
+
+| Route Path        | Function to Call        |
+|------------------|--------------------------|
+| `/signUp`         | `signUp()`               |
+| `/signUpPassword` | `signUpPassword()`       |
+| `/signIn`         | `signIn()`               |
+| `/signInPassword` | `signInPassword()`       |
+
+❗️ Calling these functions outside their intended pages may cause issues.
+
+---
 
 ### 📦 Initialize Client
 
@@ -241,3 +256,4 @@ export async function POST(req: NextRequest) {
 ## 📄 License
 
 MIT
+
