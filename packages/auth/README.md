@@ -23,7 +23,10 @@ Built in **TypeScript**, compiled for both **CommonJS** and **ESModules**.
 ## 📦 Installation
 
 ```bash
+# npm
 npm install @open_auth/auth
+# yarn
+yarn add @open_auth/auth
 ```
 
 ---
