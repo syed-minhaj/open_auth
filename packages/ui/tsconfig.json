@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "jsx": "react-jsx",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "declaration": true,
+    "declarationDir": "dist/types",
+    "outDir": "dist",
+    "strict": true,
+    "paths": {
+      "@open_auth/auth": ["../auth/index.ts"],
+      "@open_auth/auth/client": ["../auth/client.ts"],
+    }
+  },
+  "include": ["*.ts", "*.tsx"]
+}
