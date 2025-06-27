@@ -49,7 +49,6 @@ export async function open_auth_backend(from :string | null , data : any ) {
 }
 
 async function backend(from :string | null , data : any ) {
-    
     if(!from) {
         return {err : "bad request"}
     }
@@ -73,6 +72,7 @@ async function backend(from :string | null , data : any ) {
     
     else if(from === 'signUp-password') {
         if(data.password && data.credJwt) {
+            data.password = Number(data.password)  
             const signUpPassZod = signUpPassSchema.safeParse(data)
             if(!signUpPassZod.success) {
                 return {err : "invalid input"}
@@ -105,6 +105,7 @@ async function backend(from :string | null , data : any ) {
     
     else if (from === 'signIn-password') {
         if(data.password && data.credJwt) {
+            data.password = Number(data.password)  
             const signInPassZod = signInPassSchema.safeParse(data)
             if(!signInPassZod.success) {
                 return {err : "invalid input"}

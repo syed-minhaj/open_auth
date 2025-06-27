@@ -27,7 +27,7 @@ export async function signUpPassword({ password , backend_url} : {password : num
     
     
     if (res.err) {
-        console.error(res.err)
+        alert(res.err)
         return {err : res.err}
     }else if(res.jwt){
         let date = new Date();
