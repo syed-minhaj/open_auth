@@ -2,6 +2,9 @@
 /node_modules
 /dev
 /packages/auth/dist
+/packages/ui/dist
+/packages/ui/component/signIn.css
+/packages/ui/component/signIn.tsx
 
 /packages/auth/node_modules
 
