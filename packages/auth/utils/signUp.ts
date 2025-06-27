@@ -29,6 +29,7 @@ export async function signUp({ username , email , backend_url} : {username : str
     }else{
         // add email and username
         document.cookie = `open_auth_cred=${res.credJwt};`;
+        document.cookie = `open_auth_email=${email};`;
         window.location.href = `/signUpPassword`
     }
 

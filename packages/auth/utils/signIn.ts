@@ -28,6 +28,7 @@ export async function signIn({email , backend_url} : {email : string , backend_u
         return {err : res.err}
     }else{
         document.cookie = `open_auth_cred=${res.credJwt};`;
+        document.cookie = `open_auth_email=${email};`;
         window.location.href = `/signInPassword`
     }
 
