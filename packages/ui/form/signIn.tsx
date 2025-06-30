@@ -14,7 +14,7 @@ const SignInForm = ({signInFunction}:{signInFunction:funcType}) => {
     const handleClick = () => {
         setIsloading(true)
         signInFunction({email: email}).catch(err => {
-            console.log(err)
+            alert(err);
         }).then((res)=> {
             if(res?.err){
                 alert(res.err)
@@ -36,17 +36,12 @@ const SignInForm = ({signInFunction}:{signInFunction:funcType}) => {
             }}>
                 <H2>Email</H2>
                 <Input type="email" onChnageFunc={setEmail} />
-                {/* <input  type="email" onChange={(e) => {setEmail(e.target.value)}} /> */}
             </div>
             <div style={{
                 position: 'absolute',
                 bottom: '30px',
                 width: '264px'
             }} >
-                {/* <button onClick={handleClick} disabled={isloading} type="button" 
-                 className="Main-button" >
-                    CONTINUE
-                </button> */}
                 <Button onClickFunc={handleClick} isDisable={isloading} butType="primary">
                     CONTINUE
                 </Button>

@@ -14,8 +14,11 @@ const SignUpForm = ({signUpFunction}:{signUpFunction:funcType}) => {
     const handleClick = () => {
         setIsloading(true)
         signUpFunction({username: username, email: email}).catch(err => {
-            console.log(err)
-        }).then(()=> {
+            alert(err);
+        }).then((res)=> {
+            if(res?.err){
+                alert(res.err)
+            }
             setIsloading(false)
         })
     }
@@ -40,7 +43,6 @@ const SignUpForm = ({signUpFunction}:{signUpFunction:funcType}) => {
                     <H2>Username</H2>
                     <Input type="text" onChnageFunc={setUsername} />
                 </div>
-                {/* <input  type="email" onChange={(e) => {setEmail(e.target.value)}} /> */}
             </div>
             <div style={{
                 position: 'absolute',

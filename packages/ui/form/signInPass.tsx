@@ -42,8 +42,11 @@ const SignInPassForm = ({signInPassFunction , resendFunction}:{signInPassFunctio
             return
         }
         signInPassFunction({password : password}).catch(err => {
-            console.log(err)
-        }).then(()=> {
+            alert(err)
+        }).then((res)=> {
+            if(res?.err){
+                alert(res.err)
+            }
             setIsloadingSignIn(false)
         })
     }
