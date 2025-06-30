@@ -41,4 +41,4 @@ class CreateOpenAuthUI  {
     }
 }
 
-export  {SignInForm ,  CreateOpenAuthUI};
+export  { CreateOpenAuthUI};
