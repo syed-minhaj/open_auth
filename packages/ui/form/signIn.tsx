@@ -1,4 +1,3 @@
-import "../component/signIn.css"
 import { useState } from "react";
 import Frame from "../component/frame";
 import Footer from "../component/footer";
