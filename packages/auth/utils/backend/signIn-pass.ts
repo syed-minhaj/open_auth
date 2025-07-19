@@ -69,7 +69,7 @@ export async function signInPass({ password , credJwt  } : { password : number  
         return {err : 'data base error: check logs for more details'}  
     }
 
-    const jwt_tocken = sign(verified_user , process.env.AUTH_SECRET as string)
+    const jwt_tocken = sign(verified_user.data , process.env.AUTH_SECRET as string)
     return {message : "Signed In" , jwt : jwt_tocken , returnUrl : cred.prevUrl}
 
     

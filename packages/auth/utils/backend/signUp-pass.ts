@@ -56,21 +56,26 @@ export async function signUpPass({ password , credJwt  } : { password : number  
         console.log(err);
         return {err: 'Database error check logs for more details'}
     })
-    const userId = await createUser({username : cred.username , email : cred.email}).catch(err => {
+
+    let userId : number ;
+    try {
+        userId = await createUser({username : cred.username , email : cred.email})
+    }catch(err) {
         console.log(err);
         return {err: 'Database error check logs for more details'}
-    })
+    }
 
-    await sendEmail(cred.email , `Your account has been created`).catch(err => {
+    
+    await sendEmail(cred.email , `Your account has been created`,"signUp").catch(err => {
         console.log(err);
         return {err: 'Database error check logs for more details'}
     })
 
     // create jwt
     const user = {
-        id : userId,
-        username : cred.username,
-        email : cred.email
+        userId : userId,
+        userName : cred.username,
+        userEmail : cred.email
     }
     const jwt_tocken = sign(user , process.env.AUTH_SECRET as string)
     return {message : "Account created" , jwt : jwt_tocken , returnUrl : cred.prevUrl}
