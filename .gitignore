@@ -5,6 +5,13 @@
 /packages/ui/dist
 /packages/ui/component/signIn.css
 /packages/ui/component/signIn.tsx
+/packages/ui/component/signIn.txt
 
 /packages/auth/node_modules
+/packages/ui/node_modules
+
+temp
+/packages/auth/test
+/packages/ui/test
+/packages/auth/jest.config.txt
 
