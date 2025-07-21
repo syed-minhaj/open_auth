@@ -4,7 +4,7 @@ import {signOut} from "./utils/signOut";
 import {resendPass} from "./utils/resendPass";
 import { signIn } from "./utils/signIn";
 import {signInPassword} from "./utils/signInPass";
-
+import {deleteAccount} from "./utils/DeleteAccount";
 
 class CreateOpenAuthClient {
     protected backend_Url:string;
@@ -28,6 +28,9 @@ class CreateOpenAuthClient {
     }
     public signInPassword({password} : {password:number}){
         return signInPassword({password , backend_url : this.backend_Url});
+    }
+    public deleteAccount(){
+        return deleteAccount({backend_url : this.backend_Url});
     }
 }
 

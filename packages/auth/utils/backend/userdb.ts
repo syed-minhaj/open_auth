@@ -32,3 +32,16 @@ export async function getUser({userEmail} : {userEmail : string}) {
     }
     return res.rows[0]
 }
+
+export async function deleteUser({userId} : {userId : number}) {
+    if(!process.env.DATABASE_URL) {
+        throw new Error('Please set the database url in env')
+    }
+    const db = new Pool({
+        connectionString: process.env.DATABASE_URL
+    });
+
+    await db.query(`
+        DELETE FROM "User" WHERE "userId" = $1;
+    `, [userId]);
+}

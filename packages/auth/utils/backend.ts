@@ -4,6 +4,7 @@ import { signInCred } from "./backend/signIn-cred";
 import { signUpCred } from "./backend/signUp-cred";
 import { signUpPass } from "./backend/signUp-pass";
 import { signInPass } from "./backend/signIn-pass";
+import { deleteAccount } from "./backend/DeleteAccount";
 import {z} from "zod";
 
 const signUpCredSchema = z.object({
@@ -27,6 +28,9 @@ const signInPassSchema = z.object({
     credJwt : z.string().jwt({message : "invalid jwt"})
 })
 
+const deleteAccountSchema = z.object({
+    authJwt : z.string().jwt({message : "invalid Auth jwt"})
+})
   
 
 export async function open_auth_backend(from :string | null , data : any ) {
@@ -113,6 +117,18 @@ async function backend(from :string | null , data : any ) {
             return await signInPass(signInPassZod.data)
         }else{
             return {err : "provide password and credJwt"}
+        }
+    }
+    
+    else if (from === 'deleteAccount') {
+        if(data.authJwt){
+            const deleteAccountZod = deleteAccountSchema.safeParse(data)
+            if(!deleteAccountZod.success) {
+                return {err : "invalid input"}
+            }
+            return await deleteAccount(deleteAccountZod.data)
+        }else{
+            return {err : "provide email of account which to deleted"}
         }
     }
     
