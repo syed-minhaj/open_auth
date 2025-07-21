@@ -3,6 +3,7 @@
 type InputType = "email" | "password" | "text" | "number";
 type ButtonType = "primary" | "secondary";
 type TextColor = "primary" | "accent";
+type ButtonColor = "blue" | "red";
 
 const H1 = ({children}:{children:React.ReactNode}) => {
     return (
@@ -55,24 +56,90 @@ const Input = ({type , onChnageFunc }:{type : InputType , onChnageFunc : (e:any)
     )
 }
 
-const Button = ({onClickFunc, isDisable , butType , children}:{onClickFunc : () => void, isDisable : boolean, butType : ButtonType, children:React.ReactNode}) => {
+const Button = ({onClickFunc, isDisable , butType , maincolor , children}:
+    {onClickFunc : () => void, isDisable : boolean, butType : ButtonType, maincolor?:ButtonColor, children:React.ReactNode}) => {
     
-    const bgColor = butType === "primary" ? (isDisable ? "#06b99bcc" : "#06B99B") : 
-                  butType === "secondary" ? "#F3F4F6" : "#06B99B";
     
-    const color = butType === "primary" ?  "#F3F4F6" :
-                  butType === "secondary" ? (isDisable ? "#06b99bcc" : "#06B99B") : "#F3F4F6";
+
+    const bgColor = () =>{
+        if(butType === "secondary" ){
+            return "#F3F4F6"
+        }
+        else if(butType === "primary" && (!maincolor || maincolor === "blue")){
+            if(isDisable){
+                return "#06b99bcc"
+            }else{
+                return "#06B99B"
+            }
+        }
+        else if(butType === "primary" &&  maincolor === "red"){
+            if(isDisable){
+                return "#EE1D40cc"
+            }else{
+                return "#EE1D40"
+            }
+        }
+        else{
+            return "#06B99B"
+        }
+    }
+
+    const color = () => {
+        if(butType === "primary" ){
+            return "#F3F4F6"
+        }
+        else if(butType === "secondary" && (!maincolor || maincolor === "blue")){
+            if(isDisable){
+                return "#06b99bcc"
+            }else{
+                return "#06B99B"
+            }
+        }
+        else if(butType === "secondary" && maincolor === "red"){
+            if(isDisable){
+                return "#EE1D40cc"
+            }else{
+                return "#EE1D40"
+            }
+        }
+        else{
+            return "#F3F4F6"
+        }
+    }
+
+    const border = () => {
+        if(butType === "primary" ){
+            return "None"
+        }
+        else if(butType === "secondary" && (!maincolor || maincolor === "blue")){
+            if(isDisable){
+                return "1px solid #06b99bcc"
+            }else{
+                return "1px solid #06B99B"
+            }
+        }
+        else if(butType === "secondary" && maincolor === "red"){
+            if(isDisable){
+                return "1px solid #EE1D40cc"
+            }else{
+                return "1px solid #EE1D40"
+            }
+        }
+        else{
+            return "None"
+        }
+    }
     return (
         <button onClick={onClickFunc} type="button" disabled={isDisable}
         style={{
-            border: (butType === "primary" ? "None" : (isDisable ? "1px solid #06b99bcc" : "1px solid #06B99B")),
+            border: border(),
             width: '100%',
             height: '30px',
             borderRadius: '3px',
-            backgroundColor: bgColor,
+            backgroundColor: bgColor(),
             fontSize: '10.5px',
             fontWeight: '600',
-            color: color,
+            color: color(),
         }}>{children}</button>
     )
 }
