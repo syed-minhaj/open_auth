@@ -1,7 +1,8 @@
 import { createTransport } from "nodemailer";
 
+type subjectType = "signIn" | "signUp" | "deleteAccount" | "resendOPT"; 
 
-export async function sendEmail (email_to : string , message : string) {
+export async function sendEmail (email_to : string , message : string , subject : subjectType) {
     const app_password = process.env.APP_PASSWORD;
     if(!app_password) {
         console.log("\n\n\n Enter APP_PASSWORD in .env \n Enter APP_PASSWORD in .env \n\n\n")
@@ -24,11 +25,16 @@ export async function sendEmail (email_to : string , message : string) {
         }
     });
 
+    const subject_title = 
+            subject === "signIn" ? "Sign In" : 
+            subject === "signUp" ? "Sign Up" :
+            subject === "deleteAccount" ? "Delete Account" : "Subject";
+
     const app_name = process.env.APP_NAME || "Open Auth"
     transporter.sendMail({
         from: `"${app_name}" <${from_email}>`,
         to: email_to,
-        subject: 'Sign Up',
+        subject: subject_title ,
         text: message
     });
 }

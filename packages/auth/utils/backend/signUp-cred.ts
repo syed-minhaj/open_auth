@@ -43,7 +43,7 @@ export async function signUpCred({ username , email , prevUrl} : {username : str
     })
 
     // send email to user
-    await sendEmail(email , `Your OTP is ${opt}`).catch(err => {
+    await sendEmail(email , `Your OTP is ${opt}` , "signUp").catch(err => {
         console.log(err);
         return {err: 'Database error check logs for more details'}
     })

@@ -1,17 +1,9 @@
 import { User_table_checkdb, OPT_table_checkdb } from "./checkdb";
 import { opt_create } from "./optdb";
 import { sendEmail } from "./sendEmail";
-import {sign, verify} from "jsonwebtoken";
+import { verify } from "jsonwebtoken";
 import {z} from "zod";
 
-type cred = {
-    username : string ,
-    email : string ,
-    prevUrl : string
-} | {
-    email : string ,
-    prevUrl : string
-}
 
 
 const CredSchema = z.object({
@@ -63,7 +55,7 @@ export async function resendPass({ credJwt } : {  credJwt : string }) {
     })
 
     // send email to user
-    await sendEmail(cred.email , `Your OTP is ${opt}`).catch(err => {
+    await sendEmail(cred.email , `Your OTP is ${opt}`,"resendOPT").catch(err => {
         console.log(err);
         return {err: 'Database error check logs for more details'}
     })

@@ -30,7 +30,7 @@ export async function signInCred({ email  , prevUrl } : {email : string , prevUr
     })
 
     // send email to user
-    await sendEmail(email , `Your OTP is ${opt}`).catch(err => {
+    await sendEmail(email , `Your OTP is ${opt}` , "signIn").catch(err => {
         console.log(err);
         return {err: 'Database error check logs for more details'}
     })
