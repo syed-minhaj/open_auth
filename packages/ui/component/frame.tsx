@@ -1,5 +1,10 @@
 
-const Frame = ({children}:{children:React.ReactNode}) => {
+type colorType = "primary" | "secondary";
+
+const Frame = ({children , color}:{children:React.ReactNode , color? : colorType}) => {
+    
+    const bgcolor = color ? (color === "primary" ? "#06B99B" : "#EE1D40") : "#06B99B";
+
     return (
         <div style={{
             width : '300px',
@@ -18,7 +23,7 @@ const Frame = ({children}:{children:React.ReactNode}) => {
                 position: 'absolute',
                 top: '191px',
                 left: '-15px',
-                background: '#06B99B',
+                background: bgcolor,
                 borderTopLeftRadius: '9px',
                 borderTopRightRadius: '9px',
                 height: '30px',
