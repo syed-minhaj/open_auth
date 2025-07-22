@@ -145,6 +145,9 @@ await openAuth.signUpPassword({ password: 123456 });
 ```
 
 ```js
+const { CreateOpenAuthClient } = require("@open_auth/auth/client");
+const openAuth = new CreateOpenAuthClient({ backendUrl: "http://localhost:3000" });
+
 openAuth.signUpPassword({ password: 123456 });
 ```
 
@@ -157,6 +160,9 @@ await openAuth.signIn({ email: "user@example.com" });
 ```
 
 ```js
+const { CreateOpenAuthClient } = require("@open_auth/auth/client");
+const openAuth = new CreateOpenAuthClient({ backendUrl: "http://localhost:3000" });
+
 openAuth.signIn({ email: "user@example.com" });
 ```
 
@@ -169,6 +175,9 @@ await openAuth.signInPassword({ password: 123456 });
 ```
 
 ```js
+const { CreateOpenAuthClient } = require("@open_auth/auth/client");
+const openAuth = new CreateOpenAuthClient({ backendUrl: "http://localhost:3000" });
+
 openAuth.signInPassword({ password: 123456 });
 ```
 
@@ -181,6 +190,9 @@ await openAuth.resendPass();
 ```
 
 ```js
+const { CreateOpenAuthClient } = require("@open_auth/auth/client");
+const openAuth = new CreateOpenAuthClient({ backendUrl: "http://localhost:3000" });
+
 openAuth.resendPass();
 ```
 
@@ -193,6 +205,9 @@ openAuth.signOut();
 ```
 
 ```js
+const { CreateOpenAuthClient } = require("@open_auth/auth/client");
+const openAuth = new CreateOpenAuthClient({ backendUrl: "http://localhost:3000" });
+
 openAuth.signOut();
 ```
 
@@ -229,11 +244,11 @@ app.listen(port, () => {
 
 ### 🔵 Next.js Example (app/api route)
 
-```ts
+```js
 import { NextRequest, NextResponse } from 'next/server';
 import { open_auth_backend } from '@open_auth/auth';
 
-export async function POST(req: NextRequest) {
+export async function POST(req) { // req: NextRequest for route.ts
   const data = await req.json();
   const from = req.headers.get('from');
   const res = await open_auth_backend(from, data);
