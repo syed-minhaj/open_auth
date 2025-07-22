@@ -21,13 +21,12 @@ export async function signUpPassword({ password , backend_url} : {password : num
         },
         body: JSON.stringify({ password , credJwt : getCookie('open_auth_cred')}),
     }).then( res => res.json()).catch(err => {
-        console.log(err)
+        console.error(err)
         throw new Error('Backend error')
     })
     
     
     if (res.err) {
-        alert(res.err)
         return {err : res.err}
     }else if(res.jwt){
         let date = new Date();

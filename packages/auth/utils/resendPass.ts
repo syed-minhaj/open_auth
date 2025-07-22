@@ -28,7 +28,6 @@ export async function resendPass({ backend_url} : {backend_url : string}) {
 
     if (res.err) {
         console.error(res.err)
-        alert(res.err)
         return {err : res.err}
     }else{
         return {message : res.message}

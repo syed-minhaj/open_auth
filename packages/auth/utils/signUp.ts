@@ -15,7 +15,7 @@ export async function signUp({ username , email , backend_url} : {username : str
         },
         body: JSON.stringify({ username , email , prevUrl : document.referrer}),
     }).then( res => res.json()).catch(err => {
-        console.log(err)
+        console.error(err)
         throw new Error('Backend error')
     })
     
@@ -24,7 +24,6 @@ export async function signUp({ username , email , backend_url} : {username : str
     //document.cookie = `b=${res.message}258n;expires=${date.toUTCString()};`;
     if (res.err) {
         console.error(res.err)
-        alert(res.err)
         return {err : res.err}
     }else{
         // add email and username

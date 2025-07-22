@@ -19,13 +19,12 @@ export async function deleteAccount({backend_url}:{backend_url:string}){
         },
         body: JSON.stringify({ authJwt : getCookie('open_auth_jwt')}),
     }).then(res => res.json()).catch(err => {
-        console.log(err);
+        console.error(err);
         throw new Error('Backend Error');
     })
 
     if(res.err){
-        console.log(res.err);
-        alert(res.err);
+        console.error(res.err);
         return {err:res.err};
     }else{
         document.cookie = `open_auth_jwt=;expires=Tue, 01 Apr 2025 00:00:00 GMT;`;

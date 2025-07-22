@@ -16,7 +16,7 @@ export async function signIn({email , backend_url} : {email : string , backend_u
         },
         body: JSON.stringify({ email , prevUrl : document.referrer}),
     }).then( res => res.json()).catch(err => {
-        console.log(err)
+        console.error(err)
         throw new Error('Backend error')
     })
     
@@ -24,7 +24,6 @@ export async function signIn({email , backend_url} : {email : string , backend_u
 
     if (res.err) {
         console.error(res.err)
-        alert(res.err)
         return {err : res.err}
     }else{
         document.cookie = `open_auth_cred=${res.credJwt};`;
