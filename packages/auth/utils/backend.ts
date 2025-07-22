@@ -128,7 +128,8 @@ async function backend(from :string | null , data : any ) {
             }
             return await deleteAccount(deleteAccountZod.data)
         }else{
-            return {err : "provide email of account which to deleted"}
+            console.log("no auth jwt recived")
+            return {err : "Make sure you are signed In"}
         }
     }
     
