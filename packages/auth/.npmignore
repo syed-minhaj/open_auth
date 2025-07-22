@@ -3,5 +3,7 @@ index.ts
 client.ts
 utils/
 test/
+jest.config.txt
+tsconfig.json
 !dist/cjs/utils/
 !dist/esm/utils/
