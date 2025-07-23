@@ -1,4 +1,4 @@
 
-import { open_auth_backend } from './utils/backend' ;
+import { OpenAuthBackend } from './utils/backend' ;
 
-export { open_auth_backend }
+export { OpenAuthBackend }

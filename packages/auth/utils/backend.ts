@@ -33,24 +33,28 @@ const deleteAccountSchema = z.object({
 })
   
 
-export async function open_auth_backend(from :string | null , data : any ) {
-    const {Console} = console;
-    const originalLog = new Console({stdout : process.stdout});
-    
-    console.log = function(...args) {
-        process.stdout.write("\x1b[34m" + '[OPEN_AUTH] ' + "\x1b[0m" );
-        const message = args.map(arg => 
-            typeof arg === 'object' ? JSON.stringify(arg) : String(arg)
-        ).join(' ');
-        process.stdout.write(message);
-        process.stdout.write("\n");
-    };
-    const res = await backend(from , data)
-    
-    console.log = originalLog.log;
-    return res
-       
+export class OpenAuthBackend {
+
+    async Main(from :string | null , data : any ) {
+        const {Console} = console;
+        const originalLog = new Console({stdout : process.stdout});
+        
+        console.log = function(...args) {
+            process.stdout.write("\x1b[34m" + '[OPEN_AUTH] ' + "\x1b[0m" );
+            const message = args.map(arg => 
+                typeof arg === 'object' ? JSON.stringify(arg) : String(arg)
+            ).join(' ');
+            process.stdout.write(message);
+            process.stdout.write("\n");
+        };
+        const res = await backend(from , data)
+        
+        console.log = originalLog.log;
+        return res
+           
+    }
 }
+
 
 async function backend(from :string | null , data : any ) {
     if(!from) {
