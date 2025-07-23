@@ -7,7 +7,7 @@ type funcType = () => Promise<{
     err: any;
 } | undefined>
 
-const DeleteAccountForm = ({deleteAccountFunction}:{deleteAccountFunction:funcType}) => {
+const DeleteAccountForm = ({deleteAccountFunction , appName}:{deleteAccountFunction:funcType , appName : string}) => {
 
     const [confirm , setConfirm] = useState(false)
     const [userEmail , setUserEmail] = useState('')
@@ -42,7 +42,7 @@ const DeleteAccountForm = ({deleteAccountFunction}:{deleteAccountFunction:funcTy
 
     return (
         
-        <Frame color="secondary">
+        <Frame color="secondary" appName={appName}>
             <H1>Delete Account</H1>
             {
                 !confirm ?

@@ -6,7 +6,7 @@ import { H1, H2, Span, Input,Button } from "../component/basicComponents";
 type funcType = ({ email }: { email: string; }) => 
         Promise<{ err: any; } | undefined>
 
-const SignInForm = ({signInFunction}:{signInFunction:funcType}) => {
+const SignInForm = ({signInFunction , appName}:{signInFunction:funcType , appName : string}) => {   
 
     const [email , setEmail] = useState('')
     const [isloading , setIsloading] = useState(false)
@@ -24,7 +24,7 @@ const SignInForm = ({signInFunction}:{signInFunction:funcType}) => {
     
     return (
         
-        <Frame>
+        <Frame appName={appName}>   
             <H1>Sign In</H1>
             <Span> Sign in though OTP </Span>
             <div style={{

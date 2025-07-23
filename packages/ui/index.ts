@@ -9,8 +9,10 @@ import DeleteAccountForm from "./form/deleteAccount";
 import { CreateOpenAuthClient } from "@open_auth/auth/client";
 
 class CreateOpenAuthUI  {
+    public appName : string;
     public auth: CreateOpenAuthClient;
-    constructor({openAuth}:{openAuth:CreateOpenAuthClient}) {
+    constructor({openAuth , AppName} : {openAuth : CreateOpenAuthClient , AppName : string}) {
+        this.appName = AppName;
         this.auth = openAuth;
         this.SignIn         = this.SignIn.bind(this);
         this.SignUp         = this.SignUp.bind(this);
@@ -22,21 +24,21 @@ class CreateOpenAuthUI  {
 
     SignIn(): React.ReactElement {
         const signInFunction = this.auth.signIn.bind(this.auth);
-        return React.createElement(SignInForm, { signInFunction });
+        return React.createElement(SignInForm, { signInFunction , appName : this.appName});
     }
     SignUp(): React.ReactElement {
         const signUpFunction = this.auth.signUp.bind(this.auth);
-        return React.createElement(SignUpForm, { signUpFunction });
+        return React.createElement(SignUpForm, { signUpFunction , appName : this.appName});
     }
     SignInPass(): React.ReactElement {
         const signInPassFunction = this.auth.signInPassword.bind(this.auth);
         const resendFunction = this.auth.resendPass.bind(this.auth);
-        return React.createElement(SignInPassForm, { signInPassFunction , resendFunction });
+        return React.createElement(SignInPassForm, { signInPassFunction , resendFunction , appName: this.appName });
     }
     SignUpPass(): React.ReactElement {
         const signUpPassFunction = this.auth.signUpPassword.bind(this.auth);
         const resendFunction = this.auth.resendPass.bind(this.auth);
-        return React.createElement(SignUpPassForm, { signUpPassFunction , resendFunction });
+        return React.createElement(SignUpPassForm, { signUpPassFunction , resendFunction , appName : this.appName });
     }
     SignOut(): React.ReactElement {
         const signOutFunction = this.auth.signOut.bind(this.auth);
@@ -44,7 +46,7 @@ class CreateOpenAuthUI  {
     }
     DeleteAccount(): React.ReactElement {
         const deleteAccountFunction = this.auth.deleteAccount.bind(this.auth);
-        return React.createElement(DeleteAccountForm, { deleteAccountFunction });
+        return React.createElement(DeleteAccountForm, { deleteAccountFunction , appName : this.appName});
     }
 }
 

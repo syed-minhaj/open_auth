@@ -18,7 +18,7 @@ type resendFucnType = () => Promise<{
     message: any;
     err?: undefined;
 }>
-const SignInPassForm = ({signInPassFunction , resendFunction}:{signInPassFunction:signInFuncType , resendFunction:resendFucnType}) => {
+const SignInPassForm = ({signInPassFunction , resendFunction , appName  }:{signInPassFunction:signInFuncType , resendFunction:resendFucnType , appName : string}) => {
     
     const [userEmail , setUserEmail] = useState('')
     const [password , setPassword] = useState<number>()
@@ -59,7 +59,7 @@ const SignInPassForm = ({signInPassFunction , resendFunction}:{signInPassFunctio
     },[])
     
     return (
-        <Frame>
+        <Frame appName={appName}>
             <H1>Sign In</H1>
             <Span> OTP( one time password ) send to <br />
                 email<Span color="accent"> {userEmail} </Span>. <br />

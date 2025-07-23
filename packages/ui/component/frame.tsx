@@ -1,7 +1,7 @@
 
 type colorType = "primary" | "secondary";
 
-const Frame = ({children , color}:{children:React.ReactNode , color? : colorType}) => {
+const Frame = ({children , color , appName}:{children:React.ReactNode , color? : colorType , appName : string}) => {
     
     const bgcolor = color ? (color === "primary" ? "#06B99B" : "#EE1D40") : "#06B99B";
 
@@ -45,7 +45,7 @@ const Frame = ({children , color}:{children:React.ReactNode , color? : colorType
                 color: '#000000',
                 opacity: '0.85',
                 lineHeight : '1.22',
-            }}>open_Auth</h2>
+            }}>{appName}</h2>
             {children}
         </div>
     )

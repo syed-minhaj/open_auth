@@ -6,7 +6,7 @@ import { H1, H2, Span, Input,Button } from "../component/basicComponents";
 type funcType =  ({ username, email }: { username: string; email: string; }) => 
     Promise<{ err: any; } | undefined>
 
-const SignUpForm = ({signUpFunction}:{signUpFunction:funcType}) => {
+const SignUpForm = ({signUpFunction , appName}:{signUpFunction:funcType , appName : string}) => {   
     const [email , setEmail] = useState('')
     const [username , setUsername] = useState('')
 
@@ -23,7 +23,7 @@ const SignUpForm = ({signUpFunction}:{signUpFunction:funcType}) => {
         })
     }
     return(
-        <Frame>
+        <Frame appName={appName}>
             <H1>Sign Up</H1>
             <Span> Create account <br />
             Enter Email and unique username </Span>
