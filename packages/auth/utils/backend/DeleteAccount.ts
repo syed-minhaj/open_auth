@@ -47,7 +47,7 @@ export async function deleteAccount({authJwt}:{authJwt:string}){
     })
 
     // send email to user
-    await sendEmail(user.userEmail , `Your account is deleted ` , "deleteAccount").catch(err => { 
+    await sendEmail(user.userEmail , `Your account has been deleted ` , "deleteAccount").catch(err => { 
         console.log(err);
         return {err: 'Database error check logs for more details'}
     })
