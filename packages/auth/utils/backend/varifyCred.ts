@@ -11,7 +11,7 @@ async function EmailExists(email : string) {
 
     const res = await db.query(`
         SELECT EXISTS (
-          SELECT FROM "User"
+          SELECT FROM "Users"
           WHERE "userEmail" = $1
         );
     `, [email]);
@@ -34,7 +34,7 @@ async function UserNameExists(name : string) {
 
     const res = await db.query(`
         SELECT EXISTS (
-          SELECT FROM "User"
+          SELECT FROM "Users"
           WHERE "userName" = $1
         );
     `, [name]);
