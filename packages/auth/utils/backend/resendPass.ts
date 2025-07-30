@@ -1,5 +1,5 @@
-import { User_table_checkdb, OPT_table_checkdb } from "./checkdb";
-import { opt_create } from "./optdb";
+import { User_table_checkdb, OTP_table_checkdb } from "./checkdb";
+import { otp_create } from "./otpdb";
 import { sendEmail } from "./sendEmail";
 import { verify } from "jsonwebtoken";
 import {z} from "zod";
@@ -41,21 +41,21 @@ export async function resendPass({ credJwt } : {  credJwt : string }) {
     })
     
     
-    await OPT_table_checkdb().catch(err => {
+    await OTP_table_checkdb().catch(err => {
         console.log(err);
         return {err: 'Database error check logs for more details'}
     })
     
 
-    const opt = Math.floor(100000 + Math.random() * 900000);
+    const otp = Math.floor(100000 + Math.random() * 900000);
     
-    await opt_create(cred.email , opt).catch(err => {
+    await otp_create(cred.email , otp).catch(err => {
         console.log(err);
         return {err: 'Database error check logs for more details'}
     })
 
     // send email to user
-    await sendEmail(cred.email , `Your OTP is ${opt}`,"resendOPT").catch(err => {
+    await sendEmail(cred.email , `Your OTP is ${otp}`,"resendOTP").catch(err => {
         console.log(err);
         return {err: 'Database error check logs for more details'}
     })

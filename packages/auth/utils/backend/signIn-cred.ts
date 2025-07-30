@@ -1,6 +1,6 @@
 import { sign } from "jsonwebtoken";
-import { User_table_checkdb, OPT_table_checkdb } from "./checkdb";
-import { opt_create } from "./optdb";
+import { User_table_checkdb, OTP_table_checkdb } from "./checkdb";
+import { otp_create } from "./otpdb";
 import { sendEmail } from "./sendEmail";
 import { varifyEmail } from "./varifyCred";
 
@@ -15,22 +15,22 @@ export async function signInCred({ email  , prevUrl } : {email : string , prevUr
     if ( EmailError) {
         return {err: EmailError}
     }
-    await OPT_table_checkdb().catch(err => {
+    await OTP_table_checkdb().catch(err => {
         console.log(err);
         return {err: 'Database error check logs for more details'}
     })
 
 
     
-    const opt = Math.floor(100000 + Math.random() * 900000);
+    const otp = Math.floor(100000 + Math.random() * 900000);
 
-    await opt_create(email , opt).catch(err => {
+    await otp_create(email , otp).catch(err => {
         console.log(err);
         return {err: 'Database error check logs for more details'}
     })
 
     // send email to user
-    await sendEmail(email , `Your OTP is ${opt}` , "signIn").catch(err => {
+    await sendEmail(email , `Your OTP is ${otp}` , "signIn").catch(err => {
         console.log(err);
         return {err: 'Database error check logs for more details'}
     })

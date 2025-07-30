@@ -1,6 +1,6 @@
 import { createTransport } from "nodemailer";
 
-type subjectType = "signIn" | "signUp" | "deleteAccount" | "resendOPT"; 
+type subjectType = "signIn" | "signUp" | "deleteAccount" | "resendOTP"; 
 
 export async function sendEmail (email_to : string , message : string , subject : subjectType) {
     const app_password = process.env.APP_PASSWORD;

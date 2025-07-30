@@ -66,7 +66,7 @@ export async function User_table_checkdb() {
 
 }
 
-export async function OPT_table_checkdb() {
+export async function OTP_table_checkdb() {
 
   if(!process.env.DATABASE_URL) {
       throw new Error('Please set the database url in env')
@@ -78,26 +78,26 @@ export async function OPT_table_checkdb() {
   const exists = await db.query(`
       SELECT EXISTS (
         SELECT FROM information_schema.tables
-        WHERE table_name = 'OPT'
+        WHERE table_name = 'OTP'
       );
   `);
 
   if (!exists.rows[0].exists) {
       await db.query(`
-          CREATE TABLE "OPT" (
+          CREATE TABLE "OTP" (
               "userEmail" TEXT  PRIMARY KEY,
               "password" SERIAL NOT NULL,
               "tries" INTEGER NOT NULL DEFAULT 0,
               "createdAt" TIMESTAMP NOT NULL 
           );
       `);
-      console.log("OPT (one time password) table created")
+      console.log("OTP (one time password) table created")
       return
   }
 
   const columnCheckQuery = `
       SELECT column_name FROM information_schema.columns 
-      WHERE table_name = 'OPT' AND column_name IN ( 'userEmail', 'password' , 'tries' , 'createdAt');
+      WHERE table_name = 'OTP' AND column_name IN ( 'userEmail', 'password' , 'tries' , 'createdAt');
   `;
   const columnCheckResult = await db.query(columnCheckQuery);
   const existingColumns = columnCheckResult.rows.map(row => row.column_name);
@@ -105,21 +105,21 @@ export async function OPT_table_checkdb() {
   const missingColumns = requiredColumns.filter(col => !existingColumns.includes(col));
   
   if (missingColumns.length === 0) {
-    console.log("OPT table has all required columns.");
+    console.log("OTP table has all required columns.");
   } else {
       console.log("Existing columns:", existingColumns);
       console.log("Missing columns:", missingColumns);
       for (const column of missingColumns) {
         let alterQuery;
         if (column === 'userEmail') {
-          alterQuery = 'ALTER TABLE "OPT" ADD COLUMN "userEmail" TEXT NOT NULL ;';
+          alterQuery = 'ALTER TABLE "OTP" ADD COLUMN "userEmail" TEXT NOT NULL ;';
           console.error("userEmail is not a unique column, please change it to unique")
         } else if (column === 'password') {
-          alterQuery = 'ALTER TABLE "OPT" ADD COLUMN "password" SERIAL NOT NULL ;';
+          alterQuery = 'ALTER TABLE "OTP" ADD COLUMN "password" SERIAL NOT NULL ;';
         } else if (column === 'tries') {
-          alterQuery = 'ALTER TABLE "OPT" ADD COLUMN "tries" INTEGER NOT NULL DEFAULT 0;';
+          alterQuery = 'ALTER TABLE "OTP" ADD COLUMN "tries" INTEGER NOT NULL DEFAULT 0;';
         } else if (column === 'createdAt') {
-          alterQuery = 'ALTER TABLE "OPT" ADD COLUMN "createdAt" TIMESTAMP NOT NULL ;';
+          alterQuery = 'ALTER TABLE "OTP" ADD COLUMN "createdAt" TIMESTAMP NOT NULL ;';
         } else {
           throw new Error(`Unknown column: ${column}`);
         }

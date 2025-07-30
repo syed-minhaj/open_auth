@@ -1,5 +1,5 @@
-import { User_table_checkdb, OPT_table_checkdb } from "./checkdb";
-import { opt_delete, opt_varify } from "./optdb";
+import { User_table_checkdb, OTP_table_checkdb } from "./checkdb";
+import { otp_delete, otp_varify } from "./otpdb";
 import { sendEmail } from "./sendEmail";
 import { createUser } from "./userdb";
 import {sign, verify} from "jsonwebtoken";
@@ -25,7 +25,7 @@ export async function signUpPass({ password , credJwt  } : { password : number  
     })
     
     
-    await OPT_table_checkdb().catch(err => {
+    await OTP_table_checkdb().catch(err => {
         console.log(err);
         return {err: 'Database error check logs for more details'}
     })
@@ -43,16 +43,16 @@ export async function signUpPass({ password , credJwt  } : { password : number  
     }
     let cred = safeCred.data;
     
-    const varifyOPT = await opt_varify(cred.email , password)
+    const varifyOTP = await otp_varify(cred.email , password)
     
-    if(!varifyOPT) {
+    if(!varifyOTP) {
         return {err: 'wrong password'}
-    }else if(varifyOPT != true && varifyOPT.err) {
-        console.log(varifyOPT.err);
-        return {err: varifyOPT.err}
+    }else if(varifyOTP != true && varifyOTP.err) {
+        console.log(varifyOTP.err);
+        return {err: varifyOTP.err}
     }
 
-    await opt_delete(cred.email).catch(err => {
+    await otp_delete(cred.email).catch(err => {
         console.log(err);
         return {err: 'Database error check logs for more details'}
     })

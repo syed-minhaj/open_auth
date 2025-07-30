@@ -1,6 +1,5 @@
 import { verify } from "jsonwebtoken";
-import { User_table_checkdb, OPT_table_checkdb } from "./checkdb";
-import { opt_create } from "./optdb";
+import { User_table_checkdb } from "./checkdb";
 import { sendEmail } from "./sendEmail";
 import { varifyEmail } from "./varifyCred";
 import {z} from "zod";
