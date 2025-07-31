@@ -10,11 +10,13 @@ type funcType = () => Promise<{
 const DeleteAccountForm = ({deleteAccountFunction , appName}:{deleteAccountFunction:funcType , appName : string}) => {
 
     const [confirm , setConfirm] = useState(false)
+    const [clicked , setClicked] = useState(false)
     const [userEmail , setUserEmail] = useState('')
     const [text , setText] = useState('')
     const [isloading , setIsloading] = useState(false)
     
     const handleClick_Continue = () => {
+        setClicked(true)
         if (text == "Confirm deleting account"){
             setConfirm(true)
         }
@@ -66,6 +68,10 @@ const DeleteAccountForm = ({deleteAccountFunction , appName}:{deleteAccountFunct
                     <>
                         <H2>Type ‘Confirm deleting account’</H2>
                         <Input type="text" onChnageFunc={setText} />
+                        {
+                            clicked && text !== "Confirm deleting account" ?
+                            <Span color="primary">Wrong text</Span> : null
+                        }
                     </>
                     :
                     <H2> </H2>
