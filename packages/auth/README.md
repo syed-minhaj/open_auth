@@ -220,7 +220,7 @@ openAuth.signOut();
 ```js
 const express = require("express");
 const cors = require("cors");
-const { open_auth_backend } = require("@open_auth/auth");
+import { OpenAuthBackend } from '@open_auth/auth'
 require("dotenv").config();
 
 const app = express();
@@ -229,8 +229,9 @@ app.use(express.json());
 
 const port = process.env.PORT || 3000;
 
+const open_auth_backend = new OpenAuthBackend();
 app.post("/api/auth/open_auth", (req, res) => {
-  open_auth_backend(req.headers.from, req.body).then(data => {
+  open_auth_backend.Main(req.headers.from, req.body).then(data => {
     res.json(data);
   });
 });
@@ -245,14 +246,15 @@ app.listen(port, () => {
 ### 🔵 Next.js Example (app/api route)
 
 ```js
-import { NextRequest, NextResponse } from 'next/server';
-import { open_auth_backend } from '@open_auth/auth';
+import { NextRequest, NextResponse } from 'next/server'
+import { OpenAuthBackend } from '@open_auth/auth'
 
 export async function POST(req) { // req: NextRequest for route.ts
-  const data = await req.json();
-  const from = req.headers.get('from');
-  const res = await open_auth_backend(from, data);
-  return NextResponse.json(res);
+    const data = await req.json()
+    const from = req.headers.get('from')
+    const open_auth_backend = new OpenAuthBackend();
+    const res = await open_auth_backend.Main(from , data)
+    return NextResponse.json(res)
 }
 ```
 
