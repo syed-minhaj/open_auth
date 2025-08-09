@@ -211,6 +211,19 @@ const openAuth = new CreateOpenAuthClient({ backendUrl: "http://localhost:3000" 
 openAuth.signOut();
 ```
 
+### 🔁 deleteAccount
+
+```ts
+await openAuth.deleteAccount();
+```
+
+```js
+const { CreateOpenAuthClient } = require("@open_auth/auth/client");
+const openAuth = new CreateOpenAuthClient({ backendUrl: "http://localhost:3000" });
+
+openAuth.deleteAccount();
+```
+
 ---
 
 ## 🛠️ Backend Server Setup
@@ -264,10 +277,10 @@ export async function POST(req) { // req: NextRequest for route.ts
 
 | Function          | Params                            | Returns                                |
 |-------------------|-----------------------------------|----------------------------------------|
-| `signUp`          | `{ username, email }`             | `Promise<{ err: any } | undefined>`    |
-| `signUpPassword`  | `{ password }`                    | `Promise<{ err: any } | undefined>`    |
-| `signIn`          | `{ email }`                       | `Promise<{ err: any } | undefined>`    |
-| `signInPassword`  | `{ password }`                    | `Promise<{ err: any } | undefined>`    |
+| `signUp`          | `{ username, email }`             | `Promise<{ err: any } or undefined>`    |
+| `signUpPassword`  | `{ password }`                    | `Promise<{ err: any } or undefined>`    |
+| `signIn`          | `{ email }`                       | `Promise<{ err: any } or undefined>`    |
+| `signInPassword`  | `{ password }`                    | `Promise<{ err: any } or undefined>`    |
 | `resendPass`      | `none`                            | `Promise<{ err: any } or { message }>` |
 | `signOut`         | `none`                            | `{ message: string }`                  |
 
