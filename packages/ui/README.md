@@ -50,6 +50,7 @@ const openAuthUI = new CreateOpenAuthUI({
 export default openAuthUI;
 
 ```
+### SignIn
 ```jsx
 import { openAuthUI } from "@open_auth/react-ui";
 
@@ -61,6 +62,7 @@ export default function SignInPage() {
     );
 }
 ```
+### SignUp
 ```jsx
 import { openAuthUI } from "@open_auth/react-ui";
 
@@ -72,6 +74,7 @@ export default function SignUpPage() {
     );
 }
 ```
+### SignInPass
 ```jsx
 import { openAuthUI } from "@open_auth/react-ui";
 
@@ -83,6 +86,7 @@ export default function SignInPassPage() {
     );
 }
 ```
+### SignUpPass
 ```jsx
 import { openAuthUI } from "@open_auth/react-ui";
 
@@ -94,6 +98,14 @@ export default function SignUpPassPage() {
     );
 }
 ```
+### SignOut
+```jsx
+import { openAuthUI } from "@open_auth/react-ui";
+
+<openAuthUI.SignOut />
+        
+```
+### DeleteAccount
 ```jsx
 import { openAuthUI } from "@open_auth/react-ui";
 
